@@ -1,0 +1,30 @@
+apply plugin: 'cpp'
+
+model {
+    platforms {
+        x64 {
+            architecture "x86_64"
+        }
+    }
+
+    toolChains {
+        // visualCpp(VisualCpp) {
+        //     // Specify the installDir if Visual Studio cannot be located
+        //     // installDir "C:/Apps/Microsoft Visual Studio 10.0"
+        // }
+        gcc(Gcc) {
+            // path "/usr/local/bin"
+            // eachPlatform {
+            //     cCompiler.executable = "gcc-7.3.0.exe"
+            //     cppCompiler.executable = "g++-7.3.0.exe"
+            // }
+        }
+    }
+
+    components {
+        grammar_parser(NativeLibrarySpec) 
+        // {
+        //     targetPlatform "x64"
+        // }
+    }
+}
