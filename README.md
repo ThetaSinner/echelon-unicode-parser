@@ -3,10 +3,13 @@
 #### Building the project in the development environtment (eupenv)
 The develoment environment needs to be built first. See instructions below.
 
-Use the ```docker-compose.yml``` file in the project root to run the environment.
+Run the (PowerShell) command
+```cmd
+docker run -it -v "($pwd):/development" eupenv:latest
+```
 This launches a terminal. You're now in the latest Debian docker image with Gradle and GCC 7.3.0 configured.
 
-To build the project, run
+Now, inside the environment, the project can be build by running
 ```cmd
 /opt/gradle/gradle-4.6/bin/gradle assemble
 ```

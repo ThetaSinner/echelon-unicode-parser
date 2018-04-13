@@ -13,11 +13,13 @@ model {
         //     // installDir "C:/Apps/Microsoft Visual Studio 10.0"
         // }
         gcc(Gcc) {
-            // path "/usr/local/bin"
-            // eachPlatform {
-            //     cCompiler.executable = "gcc-7.3.0.exe"
-            //     cppCompiler.executable = "g++-7.3.0.exe"
-            // }
+            path "/usr/local/bin"
+            eachPlatform {
+                cCompiler.executable = "gcc-7.3.0"
+                cppCompiler.executable = "g++-7.3.0"
+                linker.executable = "g++-7.3.0"
+                staticLibArchiver.executable = "gcc-ar-7.3.0"
+            }
         }
     }
 

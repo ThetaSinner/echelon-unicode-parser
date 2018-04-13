@@ -37,7 +37,7 @@ RUN mkdir -p /opt/gcc && cd /opt/gcc && \
     cd .. && \
     mkdir objdir && \
     cd objdir && \
-    $PWD/../gcc-7.3.0/configure --program-suffix=-7.3.0 --disable-bootstrap --disable-shared --enable-languages=c,c++ && \
+    $PWD/../gcc-7.3.0/configure --program-suffix=-7.3.0 --disable-bootstrap --enable-languages=c,c++ && \
     make -j 4 && \
     make install && \
     gcc-7.3.0 --version
