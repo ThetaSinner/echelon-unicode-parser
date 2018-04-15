@@ -8,10 +8,6 @@ model {
     }
 
     toolChains {
-        // visualCpp(VisualCpp) {
-        //     // Specify the installDir if Visual Studio cannot be located
-        //     // installDir "C:/Apps/Microsoft Visual Studio 10.0"
-        // }
         gcc(Gcc) {
             path "/usr/local/bin"
             eachPlatform {
@@ -24,9 +20,15 @@ model {
     }
 
     components {
-        grammar_parser(NativeLibrarySpec) 
-        // {
-        //     targetPlatform "x64"
-        // }
+        grammar_parser(NativeLibrarySpec) {
+            targetPlatform "x64"
+        }
+        command_line(NativeExecutableSpec) {
+            targetPlatform "x64"
+
+            binaries.all {
+                lib library: "grammar_parser", linkage: 'static'
+            }
+        }
     }
 }
