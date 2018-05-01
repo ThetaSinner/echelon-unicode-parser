@@ -1,4 +1,13 @@
 apply plugin: 'cpp'
+apply plugin: 'antlr'
+
+repositories {
+    jcenter()
+}
+
+dependencies {
+    compile group: 'org.antlr', name: 'antlr4-runtime', version: '4.7.1'
+}
 
 model {
     platforms {

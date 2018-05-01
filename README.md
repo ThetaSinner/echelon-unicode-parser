@@ -1,5 +1,7 @@
 # echelon-unicode-parser
 
+The unicode specification can be found [here](http://www.unicode.org/versions/latest/)
+
 #### Building the project in the development environtment (eupenv)
 The develoment environment needs to be built first. See instructions below.
 
