@@ -2,6 +2,6 @@
 
 #include <iostream>
 
-void GrammarParser::test() {
-    std::cout << "Hello, Library";
+EchelonCustomListener::enterNumber(ParserRuleContext *ctx) {
+    std::cout << "entering number" << std::endl;
 }

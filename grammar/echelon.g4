@@ -1,4 +1,4 @@
-grammar echelon;
+grammar Echelon;
 
 /*
  * Parser rules
@@ -13,3 +13,5 @@ number: INTEGER;
 fragment DIGIT: [0-9]+;
 
 INTEGER: DIGIT;
+
+SPACE: ' ' -> skip;

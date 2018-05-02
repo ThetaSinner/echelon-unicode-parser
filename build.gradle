@@ -1,13 +1,4 @@
 apply plugin: 'cpp'
-apply plugin: 'antlr'
-
-repositories {
-    jcenter()
-}
-
-dependencies {
-    compile group: 'org.antlr', name: 'antlr4-runtime', version: '4.7.1'
-}
 
 model {
     platforms {
@@ -31,6 +22,11 @@ model {
     components {
         grammar_parser(NativeLibrarySpec) {
             targetPlatform "x64"
+
+            
+            binaries.withType(NativeBinarySpec) {
+                cppCompiler.args "-I/usr/local/include/antlr4-runtime"
+            }
         }
         command_line(NativeExecutableSpec) {
             targetPlatform "x64"
@@ -38,6 +34,34 @@ model {
             binaries.all {
                 lib library: "grammar_parser", linkage: 'static'
             }
+
+            binaries.withType(NativeBinarySpec) {
+                cppCompiler.args "-I/usr/local/include/antlr4-runtime"
+            }
         }
     }
 }
+
+task antlrGenerate(type: Exec) {
+    workingDir './grammar'
+
+    commandLine 'java', '-jar', '/opt/antlr4/antlr-4.7.1-complete.jar', '-Dlanguage=Cpp', 'Echelon.g4'
+}
+
+task antlrCopyHeaders(type: Copy, dependsOn: antlrGenerate) {
+    include '*.h'
+    from 'grammar'
+    into 'src/grammar_parser/headers'
+}
+
+task antlrCopySources(type: Copy, dependsOn: antlrGenerate) {
+    include '*.cpp'
+    from 'grammar'
+    into 'src/grammar_parser/cpp'
+}
+
+task antlr {
+}
+
+antlr.dependsOn antlrCopyHeaders
+antlr.dependsOn antlrCopySources
