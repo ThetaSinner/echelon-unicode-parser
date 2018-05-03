@@ -6,9 +6,7 @@
 #include "EchelonLexer.h"
 #include "EchelonParser.h"
 
-using namespace org::antlr::v4::runtime;
-
-int main(int argc, char** args) {
+int main(int argc, char** argv) {
     if (argc < 2) {
         std::cout << "Please provide an input file as argument 1" << std::endl;
         return 0;
@@ -16,14 +14,14 @@ int main(int argc, char** args) {
     
     std::ifstream stream;
     stream.open(argv[1]);
-    ANTLRInputStream input(stream);
+    antlr4::ANTLRInputStream input(stream);
     EchelonLexer lexer(&input);
-    CommonTokenStream tokens(&lexer);
+    antlr4::CommonTokenStream tokens(&lexer);
     EchelonParser parser(&tokens);
 
-    tree::ParseTree *tree = parser.key();
+    antlr4::tree::ParseTree *tree = parser.root();
     EchelonCustomListener listener;
-    tree::ParseTreeWalker::DEFAULT->walk(&listener, tree);
+    antlr4::tree::ParseTreeWalker::DEFAULT.walk(&listener, tree);
 
     return 0;
 }

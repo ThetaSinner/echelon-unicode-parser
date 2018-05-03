@@ -4,6 +4,8 @@ grammar Echelon;
  * Parser rules
  */
 
+root: INTEGER;
+
 number: INTEGER;
 
 /*

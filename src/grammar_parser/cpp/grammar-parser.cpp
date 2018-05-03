@@ -2,6 +2,6 @@
 
 #include <iostream>
 
-EchelonCustomListener::enterNumber(ParserRuleContext *ctx) {
+void EchelonCustomListener::enterNumber(EchelonParser::NumberContext *ctx) {
     std::cout << "entering number" << std::endl;
 }

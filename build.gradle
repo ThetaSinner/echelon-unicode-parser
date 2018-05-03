@@ -19,24 +19,24 @@ model {
         }
     }
 
+    binaries {
+        all {
+            if (toolChain in Gcc) {
+                cppCompiler.args '-I/usr/local/include/antlr4-runtime', '-Wall', '-std=c++11'
+                linker.args '-L/usr/local/lib', '-l:libantlr4-runtime.so.4.7.1'
+            }
+        }
+    }
+
     components {
         grammar_parser(NativeLibrarySpec) {
             targetPlatform "x64"
-
-            
-            binaries.withType(NativeBinarySpec) {
-                cppCompiler.args "-I/usr/local/include/antlr4-runtime"
-            }
         }
         command_line(NativeExecutableSpec) {
             targetPlatform "x64"
 
             binaries.all {
                 lib library: "grammar_parser", linkage: 'static'
-            }
-
-            binaries.withType(NativeBinarySpec) {
-                cppCompiler.args "-I/usr/local/include/antlr4-runtime"
             }
         }
     }
