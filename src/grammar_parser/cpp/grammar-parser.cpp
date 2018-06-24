@@ -2,6 +2,6 @@
 
 #include <iostream>
 
-void EchelonCustomListener::enterNumber(EchelonParser::NumberContext *ctx) {
-    std::cout << "entering number" << std::endl;
+void GrammarParser::test() {
+    std::cout << "Hello, World\n";
 }

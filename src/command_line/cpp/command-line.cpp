@@ -1,10 +1,9 @@
 #include <iostream>
+#include <string>
+#include <iostream>
 
 #include "grammar-parser.hpp"
-
-#include "antlr4-runtime.h"
-#include "EchelonLexer.h"
-#include "EchelonParser.h"
+#include "terminal-symbol.hpp"
 
 int main(int argc, char** argv) {
     if (argc < 2) {
@@ -12,16 +11,21 @@ int main(int argc, char** argv) {
         return 0;
     }
     
-    std::ifstream stream;
-    stream.open(argv[1]);
-    antlr4::ANTLRInputStream input(stream);
-    EchelonLexer lexer(&input);
-    antlr4::CommonTokenStream tokens(&lexer);
-    EchelonParser parser(&tokens);
+    // std::ifstream stream;
+    // stream.open(argv[1]);
+    
+    GrammarParser grammarParser;
+    grammarParser.test();
 
-    antlr4::tree::ParseTree *tree = parser.root();
-    EchelonCustomListener listener;
-    antlr4::tree::ParseTreeWalker::DEFAULT.walk(&listener, tree);
+    Symbol<std::string> *symbolT = new TerminalSymbol<std::string>();
+    
+    if (symbolT->getType() == SymbolType::NonTerminal) {
+        std::cout << "symbolT is a non-terminal\n";
+    }
+    else {
+        std::cout << "symbolT is a terminal\n";
+    }
 
+    std::cout << "bye" << std::endl;
     return 0;
 }

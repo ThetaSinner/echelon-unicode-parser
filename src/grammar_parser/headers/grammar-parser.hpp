@@ -1,13 +1,9 @@
 #ifndef GRAMMAR_PARSER_HPP_INCLUDED
 #define GRAMMAR_PARSER_HPP_INCLUDED
 
-#include "antlr4-runtime.h"
-#include "EchelonParser.h"
-#include "EchelonBaseListener.h"
-
-class EchelonCustomListener : public EchelonBaseListener {
+class GrammarParser {
 public:
-  void enterNumber(EchelonParser::NumberContext *ctx) override;
+    void test();
 };
 
 #endif
