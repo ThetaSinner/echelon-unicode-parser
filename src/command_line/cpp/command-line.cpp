@@ -5,6 +5,7 @@
 #include "grammar-parser.hpp"
 #include "terminal-symbol.hpp"
 #include "non-terminal-symbol.hpp"
+#include "rule.hpp"
 
 int main(int argc, char** argv) {
     if (argc < 2) {
@@ -18,25 +19,31 @@ int main(int argc, char** argv) {
     GrammarParser grammarParser;
     grammarParser.test();
 
-    Symbol<std::string> *symbolT = new TerminalSymbol<std::string>();
+    auto *symbol_T = new TerminalSymbol<std::string>();
+    symbol_T->setValue("T");
     
-    if (symbolT->getType() == SymbolType::NonTerminal) {
-        std::cout << "symbolT is a non-terminal\n";
+    if (symbol_T->getType() == SymbolType::NonTerminal) {
+        std::cout << "symbol_T is a non-terminal\n";
     }
     else {
-        std::cout << "symbolT is a terminal\n";
+        std::cout << "symbol_T is a terminal\n";
     }
 
-    delete symbolT;
+    auto *symbol_b = new NonTerminalSymbol<std::string>();
+    symbol_b->setValue("b");
 
-    symbolT = new NonTerminalSymbol<std::string>();
-
-    if (symbolT->getType() == SymbolType::NonTerminal) {
-        std::cout << "Now, symbolT is a non-terminal\n";
+    if (symbol_b->getType() == SymbolType::NonTerminal) {
+        std::cout << "symbol_b is a non-terminal\n";
     }
     else {
-        std::cout << "Now, symbolT is a terminal\n";
+        std::cout << "symbol_b is a terminal\n";
     }
+
+    auto r = new Rule<std::string>();
+    r->setKey({symbol_T});
+    r->setValue({symbol_b});
+
+    r->print();
 
     std::cout << "bye" << std::endl;
     return 0;

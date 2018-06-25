@@ -6,6 +6,7 @@
 
 template<typename T>
 class NonTerminalSymbol : public Symbol<T>  {
+public:
     SymbolType getType() override {
         return SymbolType::NonTerminal;
     }

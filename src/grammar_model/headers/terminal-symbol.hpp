@@ -6,6 +6,7 @@
 
 template<typename T>
 class TerminalSymbol : public Symbol<T>  {
+public:
     SymbolType getType() override {
         return SymbolType::Terminal;
     }
