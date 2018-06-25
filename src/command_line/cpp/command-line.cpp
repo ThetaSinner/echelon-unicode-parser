@@ -4,6 +4,7 @@
 
 #include "grammar-parser.hpp"
 #include "terminal-symbol.hpp"
+#include "non-terminal-symbol.hpp"
 
 int main(int argc, char** argv) {
     if (argc < 2) {
@@ -24,6 +25,17 @@ int main(int argc, char** argv) {
     }
     else {
         std::cout << "symbolT is a terminal\n";
+    }
+
+    delete symbolT;
+
+    symbolT = new NonTerminalSymbol<std::string>();
+
+    if (symbolT->getType() == SymbolType::NonTerminal) {
+        std::cout << "Now, symbolT is a non-terminal\n";
+    }
+    else {
+        std::cout << "Now, symbolT is a terminal\n";
     }
 
     std::cout << "bye" << std::endl;

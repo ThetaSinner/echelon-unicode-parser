@@ -6,10 +6,9 @@
 
 template<typename T>
 class TerminalSymbol : public Symbol<T>  {
-    SymbolType getType() override;
+    SymbolType getType() override {
+        return SymbolType::Terminal;
+    }
 };
-
-#include<string>
-template class TerminalSymbol<std::string>;
 
 #endif // TERMINAL_SYMBOL_HPP_INCLUDED

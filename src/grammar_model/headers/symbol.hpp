@@ -8,13 +8,15 @@ class Symbol {
     T value;
 
 public:
-    virtual T getValue();
-    virtual void setValue(T value);
+    virtual T getValue() {
+        return this->value;
+    }
+
+    virtual void setValue(T value) {
+        this->value = value;
+    }
 
     virtual SymbolType getType() = 0;
 };
-
-#include <string>
-template class Symbol<std::string>;
 
 #endif // SYMBOL_HPP_INCLUDED
