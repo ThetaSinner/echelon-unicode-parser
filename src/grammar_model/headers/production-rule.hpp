@@ -5,6 +5,7 @@
 #include <iostream>
 
 #include "symbol.hpp"
+#include "symbol-type.hpp"
 
 template<typename T>
 class ProductionRule {
@@ -20,6 +21,18 @@ public:
         this->value = value;
     }
 
+    bool isValid() {
+        bool leftHandSideHasTerminal = false;
+        for (auto k : key) {
+            if (k->getType() == SymbolType::Terminal) {
+                leftHandSideHasTerminal = true;
+                break;
+            }
+        }
+
+        return leftHandSideHasTerminal;
+    }
+
     void print() {
         for (auto k : key) {
             std::cout << k->getValue();
@@ -29,6 +42,15 @@ public:
 
         for (auto v : value) {
             std::cout << v->getValue();
+        }
+
+        std::cout << "\n";
+
+        if (this->isValid()) {
+            std::cout << "The rule is valid";
+        }
+        else {
+            std::cout << "The rule is NOT valid";
         }
 
         std::cout << std::endl;

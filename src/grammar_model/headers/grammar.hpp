@@ -30,6 +30,41 @@ public:
         production_rules.push_back(production_rule);
     }
 
+    bool isValid() {
+        if (start_symbol == nullptr) {
+            if (terminals.size() == 0 && non_terminals.size() == 0 && production_rules.size() == 0) {
+                // As a special case, the grammar is valid if all 4 components are the empty set. It produces nothing (distinct from the empty langauge).
+                return true;
+            }
+
+            return false;
+        }
+
+        bool startSymbolInSetOfNonTerminals = false;
+        for (auto nt : non_terminals) {
+            if (nt == nullptr) {
+                return false;
+            }
+
+            if (nt->equals(start_symbol)) {
+                startSymbolInSetOfNonTerminals = true;
+                break;
+            }
+        }
+
+        if (!startSymbolInSetOfNonTerminals) {
+            return false;
+        }
+
+        for (auto pr : production_rules) {
+            if (!pr->isValid()) {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
     void print() {
         std::cout << "The start symbol is " << start_symbol->getValue() << "\n";
 
@@ -42,9 +77,18 @@ public:
         else {
             std::cout << "There are " << production_rules.size() << " rules. They are\n";
         }
-        
+
         for (auto pr : production_rules) {
             pr->print();
+        }
+
+        std::cout << "\n";
+
+        if (this->isValid()) {
+            std::cout << "The grammar is valid\n";
+        }
+        else {
+            std::cout << "The grammar is NOT valid\n";
         }
 
         std::cout << std::endl;

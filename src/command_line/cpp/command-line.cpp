@@ -46,6 +46,12 @@ int main(int argc, char** argv) {
 
     r->print();
 
+    auto badRule = new ProductionRule<std::string>();
+    badRule->setKey({symbol_b});
+    badRule->setValue({symbol_T});
+
+    badRule->print();
+
     std::cout << "\nYour grammar is: \n";
     Grammar<std::string> g;
     g.addNonTerminal(symbol_T);

@@ -16,6 +16,10 @@ public:
         this->value = value;
     }
 
+    virtual bool equals(const Symbol *const other) const {
+        return other != nullptr && this->value == other->value;
+    }
+
     virtual SymbolType getType() = 0;
 };
 
