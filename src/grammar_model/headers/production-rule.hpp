@@ -7,7 +7,7 @@
 #include "symbol.hpp"
 
 template<typename T>
-class Rule {
+class ProductionRule {
     std::list<Symbol<T>*> key;
     std::list<Symbol<T>*> value;
 

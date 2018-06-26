@@ -5,7 +5,8 @@
 #include "grammar-parser.hpp"
 #include "terminal-symbol.hpp"
 #include "non-terminal-symbol.hpp"
-#include "rule.hpp"
+#include "production-rule.hpp"
+#include "grammar.hpp"
 
 int main(int argc, char** argv) {
     if (argc < 2) {
@@ -39,11 +40,20 @@ int main(int argc, char** argv) {
         std::cout << "symbol_b is a terminal\n";
     }
 
-    auto r = new Rule<std::string>();
+    auto r = new ProductionRule<std::string>();
     r->setKey({symbol_T});
     r->setValue({symbol_b});
 
     r->print();
+
+    std::cout << "\nYour grammar is: \n";
+    Grammar<std::string> g;
+    g.addNonTerminal(symbol_T);
+    g.setStartSymbol(symbol_T);
+    g.addTerminal(symbol_b);
+    g.addProductionRule(r);
+
+    g.print();
 
     std::cout << "bye" << std::endl;
     return 0;
