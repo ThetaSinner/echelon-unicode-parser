@@ -22,7 +22,7 @@ model {
     binaries {
         all {
             if (toolChain in Gcc) {
-                cppCompiler.args '-Wall', '-std=c++11'
+                cppCompiler.args '-Wall', '-std=c++14'
                 linker.args '-L/usr/local/lib'
             }
         }
@@ -35,12 +35,18 @@ model {
         grammar_model(NativeLibrarySpec) {
             targetPlatform "x64"
         }
+        grammar_utilities(NativeLibrarySpec) {
+            targetPlatform "x64"
+
+            // depends on grammar_model
+        }
         command_line(NativeExecutableSpec) {
             targetPlatform "x64"
 
             binaries.all {
                 lib library: "grammar_parser", linkage: 'static'
                 lib library: "grammar_model", linkage: 'static'
+                lib library: "grammar_utilities", linkage: 'static'
             }
         }
     }

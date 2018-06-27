@@ -2,6 +2,8 @@
 #define GRAMMAR_HPP_INCLUDED
 
 #include <vector>
+#include <algorithm>
+#include <functional>
 
 #include "symbol.hpp"
 #include "production-rule.hpp"
@@ -30,7 +32,11 @@ public:
         production_rules.push_back(production_rule);
     }
 
-    bool isValid() {
+    void eachRule(std::function<void(ProductionRule<T>*)> action) const {
+        std::for_each(production_rules.begin(), production_rules.end(), action);
+    }
+
+    bool isValid() const {
         if (start_symbol == nullptr) {
             if (terminals.size() == 0 && non_terminals.size() == 0 && production_rules.size() == 0) {
                 // As a special case, the grammar is valid if all 4 components are the empty set. It produces nothing (distinct from the empty langauge).

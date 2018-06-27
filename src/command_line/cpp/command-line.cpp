@@ -8,6 +8,8 @@
 #include "production-rule.hpp"
 #include "grammar.hpp"
 
+#include "chomsky_test.hpp"
+
 int main(int argc, char** argv) {
     if (argc < 2) {
         std::cout << "Please provide an input file as argument 1" << std::endl;
@@ -60,6 +62,14 @@ int main(int argc, char** argv) {
     g.addProductionRule(r);
 
     g.print();
+
+    using namespace echelon::grammar_utilities;
+    if (ChomskyTest<std::string>::isTypeThree(&g)) {
+        std::cout << "g is a type 3 grammar\n";
+    }
+    else {
+        std::cout << "g is NOT a type 3 grammar\n";
+    }
 
     std::cout << "bye" << std::endl;
     return 0;

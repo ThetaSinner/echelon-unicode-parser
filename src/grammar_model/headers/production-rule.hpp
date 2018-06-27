@@ -3,6 +3,8 @@
 
 #include <list>
 #include <iostream>
+#include <functional>
+#include <algorithm>
 
 #include "symbol.hpp"
 #include "symbol-type.hpp"
@@ -19,6 +21,26 @@ public:
 
     void setValue(std::list<Symbol<T>*> value) {
         this->value = value;
+    }
+
+    unsigned keyLength() {
+        return key.size();
+    }
+
+    unsigned valueLength() {
+        return value.size();
+    }
+
+    Symbol<T>* getFirstKeySymbol() {
+        return key.front();
+    }
+
+    Symbol<T>* getLastValueSymbol() {
+        return value.back();
+    }
+
+    void eachValueSymbol(std::function<void(Symbol<T>*)> action) const {
+        std::for_each(value.begin(), value.end(), action);
     }
 
     bool isValid() {
