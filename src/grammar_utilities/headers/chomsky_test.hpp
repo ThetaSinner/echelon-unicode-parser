@@ -36,14 +36,14 @@ public:
             return false;
         }
 
-        bool hasRuleWithKeyOtherThanSingleTerminal = false;
-        grammar->eachRule([&hasRuleWithKeyOtherThanSingleTerminal](auto *production_rule) {
+        bool hasRuleWithKeyOtherThanSingleNonTerminal = false;
+        grammar->eachRule([&hasRuleWithKeyOtherThanSingleNonTerminal](auto *production_rule) {
             if (production_rule->keyLength() != 1 || production_rule->getFirstKeySymbol()->getType() != SymbolType::NonTerminal) {
-                hasRuleWithKeyOtherThanSingleTerminal = true;
+                hasRuleWithKeyOtherThanSingleNonTerminal = true;
             }
         });
 
-        return !hasRuleWithKeyOtherThanSingleTerminal;
+        return !hasRuleWithKeyOtherThanSingleNonTerminal;
     }
 
     static bool isTypeThree(const Grammar<T> *const grammar) {

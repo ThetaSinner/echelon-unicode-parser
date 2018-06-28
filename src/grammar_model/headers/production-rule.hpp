@@ -44,15 +44,15 @@ public:
     }
 
     bool isValid() {
-        bool leftHandSideHasTerminal = false;
+        bool leftHandSideHasNonTerminal = false;
         for (auto k : key) {
-            if (k->getType() == SymbolType::Terminal) {
-                leftHandSideHasTerminal = true;
+            if (k->getType() == SymbolType::NonTerminal) {
+                leftHandSideHasNonTerminal = true;
                 break;
             }
         }
 
-        return leftHandSideHasTerminal;
+        return leftHandSideHasNonTerminal;
     }
 
     void print() {

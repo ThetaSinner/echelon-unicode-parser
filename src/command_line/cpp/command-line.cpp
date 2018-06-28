@@ -22,7 +22,7 @@ int main(int argc, char** argv) {
     GrammarParser grammarParser;
     grammarParser.test();
 
-    auto *symbol_T = new TerminalSymbol<std::string>();
+    auto *symbol_T = new NonTerminalSymbol<std::string>();
     symbol_T->setValue("T");
     
     if (symbol_T->getType() == SymbolType::NonTerminal) {
@@ -32,7 +32,7 @@ int main(int argc, char** argv) {
         std::cout << "symbol_T is a terminal\n";
     }
 
-    auto *symbol_b = new NonTerminalSymbol<std::string>();
+    auto *symbol_b = new TerminalSymbol<std::string>();
     symbol_b->setValue("b");
 
     if (symbol_b->getType() == SymbolType::NonTerminal) {
