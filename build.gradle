@@ -40,6 +40,9 @@ model {
 
             // depends on grammar_model
         }
+        reason(NativeLibrarySpec) {
+            targetPlatform "x64"
+        }
         command_line(NativeExecutableSpec) {
             targetPlatform "x64"
 
@@ -47,6 +50,7 @@ model {
                 lib library: "grammar_parser", linkage: 'static'
                 lib library: "grammar_model", linkage: 'static'
                 lib library: "grammar_utilities", linkage: 'static'
+                lib library: "reason", linkage: 'static'
             }
         }
     }

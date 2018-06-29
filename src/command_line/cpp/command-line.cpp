@@ -10,6 +10,10 @@
 
 #include "chomsky_test.hpp"
 
+#include "reason.hpp"
+
+void testGrammarClean();
+
 int main(int argc, char** argv) {
     if (argc < 2) {
         std::cout << "Please provide an input file as argument 1" << std::endl;
@@ -55,6 +59,7 @@ int main(int argc, char** argv) {
     badRule->print();
 
     std::cout << "\nYour grammar is: \n";
+    using namespace echelon::grammar_model;
     Grammar<std::string> g;
     g.addNonTerminal(symbol_T);
     g.setStartSymbol(symbol_T);
@@ -71,6 +76,139 @@ int main(int argc, char** argv) {
         std::cout << "g is NOT a type 3 grammar\n";
     }
 
+    auto *reason = new echelon::Reason();
+    reason->addReason("low level reason");
+    reason->addReason("higher level reason");
+    reason->replay();
+
+    testGrammarClean();
+
     std::cout << "bye" << std::endl;
     return 0;
+}
+
+void testGrammarClean()
+{
+    // Dirty Grammar
+    /*
+        Ss ---> AB|DE
+        A--->a
+        B--->bC
+        C--->c
+        D--->dF
+        E--->e
+        F--->fD
+    */
+
+    Symbol<std::string> *S = new NonTerminalSymbol<std::string>();
+    S->setValue("S");
+
+    Symbol<std::string> *A = new NonTerminalSymbol<std::string>();
+    S->setValue("A");
+
+    Symbol<std::string> *B = new NonTerminalSymbol<std::string>();
+    S->setValue("B");
+
+    Symbol<std::string> *C = new NonTerminalSymbol<std::string>();
+    S->setValue("C");
+
+    Symbol<std::string> *D = new NonTerminalSymbol<std::string>();
+    S->setValue("D");
+
+    Symbol<std::string> *E = new NonTerminalSymbol<std::string>();
+    S->setValue("E");
+
+    Symbol<std::string> *F = new NonTerminalSymbol<std::string>();
+    S->setValue("F");
+
+    Symbol<std::string> *a = new TerminalSymbol<std::string>();
+    S->setValue("a");
+
+    Symbol<std::string> *b = new TerminalSymbol<std::string>();
+    S->setValue("b");
+
+    Symbol<std::string> *c = new TerminalSymbol<std::string>();
+    S->setValue("c");
+
+    Symbol<std::string> *d = new TerminalSymbol<std::string>();
+    S->setValue("d");
+
+    Symbol<std::string> *e = new TerminalSymbol<std::string>();
+    S->setValue("e");
+
+    Symbol<std::string> *f = new TerminalSymbol<std::string>();
+    S->setValue("f");
+
+    ProductionRule<std::string> *rule1 = new ProductionRule<std::string>();
+    rule1->setKey({S});
+    rule1->setValue({A, B});
+
+    ProductionRule<std::string> *rule2 = new ProductionRule<std::string>();
+    rule2->setKey({S});
+    rule2->setValue({D, E});
+
+    ProductionRule<std::string> *rule3 = new ProductionRule<std::string>();
+    rule3->setKey({A});
+    rule3->setValue({a});
+
+    ProductionRule<std::string> *rule4 = new ProductionRule<std::string>();
+    rule4->setKey({B});
+    rule4->setValue({b, C});
+
+    ProductionRule<std::string> *rule5 = new ProductionRule<std::string>();
+    rule5->setKey({C});
+    rule5->setValue({c});
+
+    ProductionRule<std::string> *rule6 = new ProductionRule<std::string>();
+    rule6->setKey({D});
+    rule6->setValue({d, F});
+
+    ProductionRule<std::string> *rule7 = new ProductionRule<std::string>();
+    rule7->setKey({E});
+    rule7->setValue({e});
+
+    ProductionRule<std::string> *rule8 = new ProductionRule<std::string>();
+    rule8->setKey({F});
+    rule8->setValue({f, D});
+
+
+    using namespace echelon::grammar_model;
+    auto *grammarForCleaning = new Grammar<std::string>();
+    grammarForCleaning->setStartSymbol(S);
+
+    grammarForCleaning->addNonTerminal(S);
+    grammarForCleaning->addNonTerminal(A);
+    grammarForCleaning->addNonTerminal(B);
+    grammarForCleaning->addNonTerminal(C);
+    grammarForCleaning->addNonTerminal(D);
+    grammarForCleaning->addNonTerminal(E);
+    grammarForCleaning->addNonTerminal(F);
+
+    grammarForCleaning->addTerminal(a);
+    grammarForCleaning->addTerminal(b);
+    grammarForCleaning->addTerminal(c);
+    grammarForCleaning->addTerminal(d);
+    grammarForCleaning->addTerminal(e);
+    grammarForCleaning->addTerminal(f);
+
+    grammarForCleaning->addProductionRule(rule1);
+    grammarForCleaning->addProductionRule(rule2);
+    grammarForCleaning->addProductionRule(rule3);
+    grammarForCleaning->addProductionRule(rule4);
+    grammarForCleaning->addProductionRule(rule5);
+    grammarForCleaning->addProductionRule(rule6);
+    grammarForCleaning->addProductionRule(rule7);
+    grammarForCleaning->addProductionRule(rule8);
+
+    using namespace echelon;
+    auto *reason = new Reason();
+
+    if (grammarForCleaning->isValid(reason)) {
+        std::cout << "Your grammar for cleaning is valid\n";
+    }
+    else {
+        std::cout << "Your grammar for cleaning is NOT valid\n";
+
+        reason->replay();
+    }
 }

@@ -9,11 +9,13 @@
 
 namespace echelon { namespace grammar_utilities {
 
+using namespace echelon::grammar_model;
+
 template<typename T>
 class ChomskyTest {
 public:
     static bool isTypeZero(const Grammar<T> *const grammar) {
-        return grammar->isValid();
+        return grammar->isValid(nullptr);
     }
 
     static bool isTypeOne(const Grammar<T> *const grammar) {
