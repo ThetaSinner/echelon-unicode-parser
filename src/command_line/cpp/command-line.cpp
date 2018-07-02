@@ -8,9 +8,11 @@
 #include "production-rule.hpp"
 #include "grammar.hpp"
 
-#include "chomsky_test.hpp"
+#include "chomsky-test.hpp"
 
 #include "reason.hpp"
+
+#include "cleaner.hpp"
 
 void testGrammarClean();
 
@@ -104,40 +106,40 @@ void testGrammarClean()
     S->setValue("S");
 
     Symbol<std::string> *A = new NonTerminalSymbol<std::string>();
-    S->setValue("A");
+    A->setValue("A");
 
     Symbol<std::string> *B = new NonTerminalSymbol<std::string>();
-    S->setValue("B");
+    B->setValue("B");
 
     Symbol<std::string> *C = new NonTerminalSymbol<std::string>();
-    S->setValue("C");
+    C->setValue("C");
 
     Symbol<std::string> *D = new NonTerminalSymbol<std::string>();
-    S->setValue("D");
+    D->setValue("D");
 
     Symbol<std::string> *E = new NonTerminalSymbol<std::string>();
-    S->setValue("E");
+    E->setValue("E");
 
     Symbol<std::string> *F = new NonTerminalSymbol<std::string>();
-    S->setValue("F");
+    F->setValue("F");
 
     Symbol<std::string> *a = new TerminalSymbol<std::string>();
-    S->setValue("a");
+    a->setValue("a");
 
     Symbol<std::string> *b = new TerminalSymbol<std::string>();
-    S->setValue("b");
+    b->setValue("b");
 
     Symbol<std::string> *c = new TerminalSymbol<std::string>();
-    S->setValue("c");
+    c->setValue("c");
 
     Symbol<std::string> *d = new TerminalSymbol<std::string>();
-    S->setValue("d");
+    d->setValue("d");
 
     Symbol<std::string> *e = new TerminalSymbol<std::string>();
-    S->setValue("e");
+    e->setValue("e");
 
     Symbol<std::string> *f = new TerminalSymbol<std::string>();
-    S->setValue("f");
+    f->setValue("f");
 
     ProductionRule<std::string> *rule1 = new ProductionRule<std::string>();
     rule1->setKey({S});
@@ -211,4 +213,15 @@ void testGrammarClean()
 
         reason->replay();
     }
+
+    grammarForCleaning->print();
+
+    using namespace echelon::grammar_utilities::cleaning;
+    GrammarCleaner<std::string> cleaner;
+    auto *cleaningReason = new Reason();
+    if (!cleaner.clean(grammarForCleaning, cleaningReason)) {
+        std::cout << "Failed to clean the grammar\n";
+    }
+
+    grammarForCleaning->print();
 }

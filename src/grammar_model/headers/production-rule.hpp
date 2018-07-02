@@ -11,6 +11,7 @@
 
 template<typename T>
 class ProductionRule {
+protected:
     std::list<Symbol<T>*> key;
     std::list<Symbol<T>*> value;
 

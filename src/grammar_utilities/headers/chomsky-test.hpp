@@ -5,7 +5,7 @@
 #include "production-rule.hpp"
 #include "symbol-type.hpp"
 
-#include "chomsky_type.hpp"
+#include "chomsky-type.hpp"
 
 namespace echelon { namespace grammar_utilities {
 
@@ -70,6 +70,10 @@ public:
         });
 
         return !hasInvalidTypeThreeRule;
+    }
+
+    static bool isContextFree(const Grammar<T> *const grammar) {
+        return isTypeTwo(grammar);
     }
 };
 

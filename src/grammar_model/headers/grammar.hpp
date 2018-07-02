@@ -41,6 +41,14 @@ public:
         std::for_each(production_rules.begin(), production_rules.end(), action);
     }
 
+    void eachNonTerminal(std::function<void(Symbol<T>*)> action) const {
+        std::for_each(non_terminals.begin(), non_terminals.end(), action);
+    }
+
+    void removeProductionRule(ProductionRule<T>* production_rule) {        
+        production_rules.erase(std::remove(production_rules.begin(), production_rules.end(), production_rule), production_rules.end());
+    }
+
     bool isValid(Reason *reason) const {
         if (start_symbol == nullptr) {
             if (terminals.size() == 0 && non_terminals.size() == 0 && production_rules.size() == 0) {
