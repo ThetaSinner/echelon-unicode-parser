@@ -33,6 +33,10 @@ public:
         this->start_symbol = start_symbol;
     }
 
+    Symbol<T>* getStartSymbol() {
+        return start_symbol;
+    }
+
     void addProductionRule(ProductionRule<T>* production_rule) {
         production_rules.push_back(production_rule);
     }

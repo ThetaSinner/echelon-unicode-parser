@@ -6,6 +6,8 @@ namespace echelon { namespace grammar_utilities { namespace cleaning {
 enum class CleanStatus {
     IsProductive,
     IsNonProductive,
+    IsReachable,
+    IsNotReachable,
     DoNotKnow
 };
 
