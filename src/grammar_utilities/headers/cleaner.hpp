@@ -2,6 +2,7 @@
 #define GRAMMAR_CLEANER_HPP_INCLUDED
 
 #include <map>
+#include <list>
 
 #include "grammar.hpp"
 #include "production-rule.hpp"
@@ -106,6 +107,8 @@ class GrammarCleaner {
         }
 
         applyCleaning(grammar, rule_status);
+
+        return true;
     }
 
     bool removeUnreachableNonTerminals(Grammar<T> *grammar, Reason *reason) {
