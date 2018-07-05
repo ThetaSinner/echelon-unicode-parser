@@ -36,3 +36,4 @@ This does mean you're coding against the Visual C++ headers and building against
 - The PATH variable in the eupenv is only set in the build session. Which means you have to reference ```/opt/gradle/gradle-4.6/bin/gradle``` when using the image.
 - VSCode runs outside the eupenv, so it can't use the header files from in there for intelliSense. Possibly I can map the directory containing the headers from the image.
 - Get Gradle to use gcc-7.3.0 rather than the default system gcc in the eupenv. It works perfectly with the default, but throws a fit when you ask it to use the custom build. One possibility is that I uninstall the default gcc before installing the new one - configured without a prefix.
+- Build google test into the docker image so it doesn't need to be checked in.
