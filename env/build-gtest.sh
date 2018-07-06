@@ -1,4 +1,5 @@
 # Intended to run from the project root
+# See https://github.com/google/googletest/blob/master/googletest/README.md
 
 export GTEST_DIR=/development/googletest-release-1.8.0/googletest
 
