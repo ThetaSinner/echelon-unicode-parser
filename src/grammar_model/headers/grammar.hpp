@@ -41,6 +41,14 @@ public:
         production_rules.push_back(production_rule);
     }
 
+    ProductionRule<T>* getProductionRule(unsigned index) {
+        return production_rules[index];
+    }
+
+    unsigned numberOfProductionRules() {
+        return production_rules.size();
+    }
+
     void eachRule(std::function<void(ProductionRule<T>*)> action) const {
         std::for_each(production_rules.begin(), production_rules.end(), action);
     }
