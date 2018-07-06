@@ -60,32 +60,6 @@ int main(int argc, char** argv) {
 
     badRule->print();
 
-    std::cout << "\nYour grammar is: \n";
-    using namespace echelon::grammar_model;
-    Grammar<std::string> g;
-    g.addNonTerminal(symbol_T);
-    g.setStartSymbol(symbol_T);
-    g.addTerminal(symbol_b);
-    g.addProductionRule(r);
-
-    g.print();
-
-    using namespace echelon::grammar_utilities;
-    if (ChomskyTest<std::string>::isTypeThree(&g)) {
-        std::cout << "g is a type 3 grammar\n";
-    }
-    else {
-        std::cout << "g is NOT a type 3 grammar\n";
-    }
-
-    auto *reason = new echelon::diagnostics::Reason();
-    reason->addReason("low level reason");
-    reason->addReason("higher level reason");
-
-    std::stringstream test_reason_stream;
-    reason->replay(test_reason_stream);
-    std::cout << test_reason_stream.str() << std::endl;
-
     testGrammarClean();
 
     std::cout << "bye" << std::endl;
