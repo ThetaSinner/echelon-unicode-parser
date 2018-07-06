@@ -3,18 +3,18 @@
 
 #include <stack>
 #include <string>
-#include <iostream>
+#include <sstream>
 
-namespace echelon {
+namespace echelon { namespace diagnostics {
 
 class Reason {
     std::stack<std::string> reason_stack;
 public:
     void addReason(std::string reason);
 
-    void replay();
+    void replay(std::stringstream& replay_stream);
 };
 
-}
+}}
 
 #endif // REASON_HPP_INCLUDED

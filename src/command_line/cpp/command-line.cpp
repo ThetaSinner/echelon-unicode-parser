@@ -78,10 +78,13 @@ int main(int argc, char** argv) {
         std::cout << "g is NOT a type 3 grammar\n";
     }
 
-    auto *reason = new echelon::Reason();
+    auto *reason = new echelon::diagnostics::Reason();
     reason->addReason("low level reason");
     reason->addReason("higher level reason");
-    reason->replay();
+
+    std::stringstream test_reason_stream;
+    reason->replay(test_reason_stream);
+    std::cout << test_reason_stream.str() << std::endl;
 
     testGrammarClean();
 
@@ -202,7 +205,7 @@ void testGrammarClean()
     grammarForCleaning->addProductionRule(rule7);
     grammarForCleaning->addProductionRule(rule8);
 
-    using namespace echelon;
+    using namespace echelon::diagnostics;
     auto *reason = new Reason();
 
     if (grammarForCleaning->isValid(reason)) {
@@ -211,7 +214,9 @@ void testGrammarClean()
     else {
         std::cout << "Your grammar for cleaning is NOT valid\n";
 
-        reason->replay();
+        std::stringstream ss;
+        reason->replay(ss);
+        std::cout << ss.str() << std::endl;
     }
 
     grammarForCleaning->print();

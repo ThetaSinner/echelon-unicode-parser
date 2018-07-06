@@ -55,14 +55,14 @@ public:
 
         bool hasInvalidTypeThreeRule = false;
         grammar->eachRule([&hasInvalidTypeThreeRule](auto *production_rule) {
-            int terminalSymbolCount = 0;
+            unsigned terminalSymbolCount = 0;
             production_rule->eachValueSymbol([&terminalSymbolCount](auto *symbol) {
                 if (symbol->getType() == SymbolType::Terminal) {
                     ++terminalSymbolCount;
                 }
             });
 
-            int nonTerminalSymbolsInLastPosition = production_rule->valueLength() > 0 && production_rule->getLastValueSymbol()->getType() == SymbolType::NonTerminal ? 1 : 0;
+            unsigned nonTerminalSymbolsInLastPosition = production_rule->valueLength() > 0 && production_rule->getLastValueSymbol()->getType() == SymbolType::NonTerminal ? 1 : 0;
 
             if (terminalSymbolCount + nonTerminalSymbolsInLastPosition != production_rule->valueLength()) {
                 hasInvalidTypeThreeRule = true;

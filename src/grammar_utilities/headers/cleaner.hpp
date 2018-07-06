@@ -47,7 +47,7 @@ class GrammarCleaner {
         }
     }
 
-    bool removeNonProductiveRules(Grammar<T> *grammar, Reason *reason) {
+    bool removeNonProductiveRules(Grammar<T> *grammar, echelon::diagnostics::Reason *reason) {
         if (!ChomskyTest<std::string>::isContextFree(grammar)) {
             reason->addReason("Do not know how to clean the grammar because it is not context free");
             return false;
@@ -111,7 +111,7 @@ class GrammarCleaner {
         return true;
     }
 
-    bool removeUnreachableNonTerminals(Grammar<T> *grammar, Reason *reason) {
+    bool removeUnreachableNonTerminals(Grammar<T> *grammar, echelon::diagnostics::Reason *reason) {
         std::map<Symbol<T>*, CleanStatus> non_terminal_status;
         grammar->eachNonTerminal([&non_terminal_status](Symbol<T> *non_terminal) {
             non_terminal_status[non_terminal] = CleanStatus::DoNotKnow;
@@ -163,7 +163,7 @@ class GrammarCleaner {
         return true;
     }
 public:
-    bool clean(Grammar<T> *grammar, Reason *reason) {
+    bool clean(Grammar<T> *grammar, echelon::diagnostics::Reason *reason) {
         if (!removeNonProductiveRules(grammar, reason)) {
             return false;
         }

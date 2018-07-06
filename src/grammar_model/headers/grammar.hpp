@@ -53,7 +53,7 @@ public:
         production_rules.erase(std::remove(production_rules.begin(), production_rules.end(), production_rule), production_rules.end());
     }
 
-    bool isValid(Reason *reason) const {
+    bool isValid(echelon::diagnostics::Reason *reason) const {
         if (start_symbol == nullptr) {
             if (terminals.size() == 0 && non_terminals.size() == 0 && production_rules.size() == 0) {
                 // As a special case, the grammar is valid if all 4 components are the empty set. It produces nothing (distinct from the empty langauge).
@@ -118,14 +118,16 @@ public:
 
         std::cout << "\n";
 
-        auto *reason = new Reason();
+        auto *reason = new echelon::diagnostics::Reason();
         if (this->isValid(reason)) {
             std::cout << "The grammar is valid\n";
         }
         else {
             std::cout << "The grammar is NOT valid\n";
 
-            reason->replay();
+            std::stringstream ss;
+            reason->replay(ss);
+            std::cout << ss.str() << std::endl;
         }
 
         std::cout << std::endl;

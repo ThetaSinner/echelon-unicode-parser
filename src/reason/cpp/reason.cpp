@@ -1,23 +1,23 @@
 #include "reason.hpp"
 
-void echelon::Reason::addReason(std::string reason) {
+using namespace echelon::diagnostics;
+
+void Reason::addReason(std::string reason) {
     reason_stack.push(reason);
 }
 
-void echelon::Reason::replay() {
+void Reason::replay(std::stringstream& replay_stream) {
     if (reason_stack.size()) {
-        std::cout << "Reason: " << reason_stack.top() << "\n";
+        replay_stream << "Reason: " << reason_stack.top();
         reason_stack.pop();
     }
     else {
-        std::cout << "Unknown reason\n";
+        replay_stream << "Unknown reason";
         return;
     }
 
     while (reason_stack.size()) {
-        std::cout << "        " << reason_stack.top() << "\n";
+        replay_stream << "\n        " << reason_stack.top();
         reason_stack.pop();
     }
-
-    std::cout << std::flush;
 }
