@@ -72,8 +72,16 @@ public:
         return !hasInvalidTypeThreeRule;
     }
 
+    static bool isContextSensitive(const Grammar<T> *const grammar) {
+        return isTypeOne(grammar);
+    }
+
     static bool isContextFree(const Grammar<T> *const grammar) {
         return isTypeTwo(grammar);
+    }
+
+    static bool isRegular(const Grammar<T> *const grammar) {
+        return isTypeThree(grammar);
     }
 };
 
