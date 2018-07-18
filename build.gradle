@@ -4,7 +4,8 @@ apply plugin: 'google-test'
 // This rather ugly bit of code disables googletest for the command_line executable.
 // I don't want to run tests against it with googletest.
 tasks.whenTaskAdded {task ->
-    if(task.name.contains("Command_lineTestGoogleTest")) {
+    if (task.name.contains("Command_lineTestGoogleTest")
+        || task.name.contains("Parser_apiTestGoogleTest")) {
         task.enabled = false
     }
 }
@@ -61,6 +62,9 @@ model {
             targetPlatform "x64"
         }
         grammar_utilities(NativeLibrarySpec) {
+            targetPlatform "x64"
+        }
+        parser_api(NativeLibrarySpec) {
             targetPlatform "x64"
         }
         reason(NativeLibrarySpec) {
