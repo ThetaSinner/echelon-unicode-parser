@@ -5,7 +5,9 @@ apply plugin: 'google-test'
 // I don't want to run tests against it with googletest.
 tasks.whenTaskAdded {task ->
     if (task.name.contains("Command_lineTestGoogleTest")
-        || task.name.contains("Parser_apiTestGoogleTest")) {
+        || task.name.contains("Parser_apiTestGoogleTest")
+        || task.name.contains("Parser_api_default_implTest")
+        || task.name.contains("Parser_impl_ungerTest")) {
         task.enabled = false
     }
 }
@@ -67,6 +69,12 @@ model {
         parser_api(NativeLibrarySpec) {
             targetPlatform "x64"
         }
+        parser_api_default_impl(NativeLibrarySpec) {
+            targetPlatform "x64"
+        }
+        parser_impl_unger(NativeLibrarySpec) {
+            targetPlatform "x64"
+        }
         reason(NativeLibrarySpec) {
             targetPlatform "x64"
         }
@@ -78,6 +86,8 @@ model {
                 cpp.lib library: "grammar_model"
                 cpp.lib library: "reason"
                 cpp.lib library: "grammar_utilities"
+                cpp.lib library: "parser_api"
+                cpp.lib library: "parser_api_default_impl"
             }
         }
     }

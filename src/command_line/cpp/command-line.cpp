@@ -14,6 +14,9 @@
 
 #include "cleaner.hpp"
 
+#include "input-sequence.hpp"
+#include "string-input-sequence.hpp"
+
 int main(int argc, char** argv) {
     if (argc < 2) {
         std::cout << "Please provide an input file as argument 1" << std::endl;
@@ -57,6 +60,9 @@ int main(int argc, char** argv) {
     badRule->setValue({symbol_T});
 
     badRule->print();
+
+    using namespace echelon::parsing;
+    api::InputSequence<char>* seq = new api_default_impl::StringInputSequence("hello, sequence");
 
     std::cout << "bye" << std::endl;
     return 0;
