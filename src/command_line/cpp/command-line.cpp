@@ -1,6 +1,7 @@
 #include <iostream>
 #include <string>
 #include <iostream>
+#include <vector>
 
 #include "grammar-parser.hpp"
 #include "terminal-symbol.hpp"
@@ -16,6 +17,19 @@
 
 #include "input-sequence.hpp"
 #include "string-input-sequence.hpp"
+#include "sequence-partition.hpp"
+#include "sequence-partition-generator.hpp"
+
+void printIndices(std::vector<unsigned> indices) {
+    for (unsigned i = 0; i < indices.size(); i++) {
+        std::cout << indices[i];
+        if (i + 1 != indices.size()) {
+            std::cout << " | ";
+        }
+    }
+
+    std::cout << "\n";
+}
 
 int main(int argc, char** argv) {
     if (argc < 2) {
@@ -62,7 +76,15 @@ int main(int argc, char** argv) {
     badRule->print();
 
     using namespace echelon::parsing;
-    api::InputSequence<char>* seq = new api_default_impl::StringInputSequence("hello, sequence");
+    api::InputSequence<char>* seq = new api_default_impl::StringInputSequence("pqr");
+
+    auto* gen = new impl::unger::internal::SequencePartitionGenerator<char>(seq, 3);
+    while (gen->currentValue() != nullptr) {
+        auto indices = gen->currentValue()->getPartitionIndices();
+        printIndices(indices);
+
+        gen->moveNext();
+    }
 
     std::cout << "bye" << std::endl;
     return 0;

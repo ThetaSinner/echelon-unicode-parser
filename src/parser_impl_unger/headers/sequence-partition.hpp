@@ -11,6 +11,10 @@ public:
     SequencePartition(std::vector<unsigned> partitionIndices) {
         partition_indices = partitionIndices;
     }
+
+    std::vector<unsigned> getPartitionIndices() {
+        return partition_indices;
+    }
 };
 
 }}}}}
