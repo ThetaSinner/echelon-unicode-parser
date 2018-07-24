@@ -25,78 +25,78 @@ TEST(GrammarCleaner, CleanGrammar) {
         F--->fD
     */
 
-    Symbol<std::string> *S = new NonTerminalSymbol<std::string>();
+    auto *S = new NonTerminalSymbol<std::string>();
     S->setValue("S");
 
-    Symbol<std::string> *A = new NonTerminalSymbol<std::string>();
+    auto *A = new NonTerminalSymbol<std::string>();
     A->setValue("A");
 
-    Symbol<std::string> *B = new NonTerminalSymbol<std::string>();
+    auto *B = new NonTerminalSymbol<std::string>();
     B->setValue("B");
 
-    Symbol<std::string> *C = new NonTerminalSymbol<std::string>();
+    auto *C = new NonTerminalSymbol<std::string>();
     C->setValue("C");
 
-    Symbol<std::string> *D = new NonTerminalSymbol<std::string>();
+    auto *D = new NonTerminalSymbol<std::string>();
     D->setValue("D");
 
-    Symbol<std::string> *E = new NonTerminalSymbol<std::string>();
+    auto *E = new NonTerminalSymbol<std::string>();
     E->setValue("E");
 
-    Symbol<std::string> *F = new NonTerminalSymbol<std::string>();
+    auto *F = new NonTerminalSymbol<std::string>();
     F->setValue("F");
 
-    Symbol<std::string> *a = new TerminalSymbol<std::string>();
-    a->setValue("a");
+    auto *a = new TerminalSymbol<char>();
+    a->setValue('a');
 
-    Symbol<std::string> *b = new TerminalSymbol<std::string>();
-    b->setValue("b");
+    auto *b = new TerminalSymbol<char>();
+    b->setValue('b');
 
-    Symbol<std::string> *c = new TerminalSymbol<std::string>();
-    c->setValue("c");
+    auto *c = new TerminalSymbol<char>();
+    c->setValue('c');
 
-    Symbol<std::string> *d = new TerminalSymbol<std::string>();
-    d->setValue("d");
+    auto *d = new TerminalSymbol<char>();
+    d->setValue('d');
 
-    Symbol<std::string> *e = new TerminalSymbol<std::string>();
-    e->setValue("e");
+    auto *e = new TerminalSymbol<char>();
+    e->setValue('e');
 
-    Symbol<std::string> *f = new TerminalSymbol<std::string>();
-    f->setValue("f");
+    auto *f = new TerminalSymbol<char>();
+    f->setValue('f');
 
-    ProductionRule<std::string> *rule1 = new ProductionRule<std::string>();
+    ProductionRule *rule1 = new ProductionRule();
     rule1->setKey({S});
     rule1->setValue({A, B});
 
-    ProductionRule<std::string> *rule2 = new ProductionRule<std::string>();
+    ProductionRule *rule2 = new ProductionRule();
     rule2->setKey({S});
     rule2->setValue({D, E});
 
-    ProductionRule<std::string> *rule3 = new ProductionRule<std::string>();
+    ProductionRule *rule3 = new ProductionRule();
     rule3->setKey({A});
     rule3->setValue({a});
 
-    ProductionRule<std::string> *rule4 = new ProductionRule<std::string>();
+    ProductionRule *rule4 = new ProductionRule();
     rule4->setKey({B});
     rule4->setValue({b, C});
 
-    ProductionRule<std::string> *rule5 = new ProductionRule<std::string>();
+    ProductionRule *rule5 = new ProductionRule();
     rule5->setKey({C});
     rule5->setValue({c});
 
-    ProductionRule<std::string> *rule6 = new ProductionRule<std::string>();
+    ProductionRule *rule6 = new ProductionRule();
     rule6->setKey({D});
     rule6->setValue({d, F});
 
-    ProductionRule<std::string> *rule7 = new ProductionRule<std::string>();
+    ProductionRule *rule7 = new ProductionRule();
     rule7->setKey({E});
     rule7->setValue({e});
 
-    ProductionRule<std::string> *rule8 = new ProductionRule<std::string>();
+    ProductionRule *rule8 = new ProductionRule();
     rule8->setKey({F});
     rule8->setValue({f, D});
 
-    auto *grammarForCleaning = new Grammar<std::string>();
+    auto *grammarForCleaning = new Grammar();
     grammarForCleaning->setStartSymbol(S);
 
     grammarForCleaning->addNonTerminal(S);
@@ -125,7 +125,7 @@ TEST(GrammarCleaner, CleanGrammar) {
 
     ASSERT_TRUE(grammarForCleaning->isValid(nullptr));
 
-    GrammarCleaner<std::string> cleaner;
+    GrammarCleaner cleaner;
     auto *cleaningReason = new Reason();
     ASSERT_TRUE(cleaner.clean(grammarForCleaning, cleaningReason));
 
@@ -136,47 +136,47 @@ TEST(GrammarCleaner, CleanGrammar) {
         B -> bC
         C -> c
     */
-    ASSERT_EQ(4, grammarForCleaning->numberOfProductionRules());
+    ASSERT_EQ((unsigned) 4, grammarForCleaning->numberOfProductionRules());
 
     auto cleanRule1 = grammarForCleaning->getProductionRule(0);
-    ASSERT_EQ(S->getValue(), cleanRule1->getFirstKeySymbol()->getValue());
-    ASSERT_EQ(2, cleanRule1->valueLength());
+    ASSERT_EQ(S->getValue(), ((NonTerminalSymbol<std::string>*) cleanRule1->getFirstKeySymbol())->getValue());
+    ASSERT_EQ((unsigned) 2, cleanRule1->valueLength());
 
     int cleanRule1ValueSymbolIndex = 0;
-    cleanRule1->eachValueSymbol([&cleanRule1ValueSymbolIndex](Symbol<std::string>* symbol) {
+    cleanRule1->eachValueSymbol([&cleanRule1ValueSymbolIndex](Symbol* symbol) {
         switch (cleanRule1ValueSymbolIndex) {
             case 0:
-                ASSERT_EQ("A", symbol->getValue());
+                ASSERT_EQ("A", ((NonTerminalSymbol<std::string>*) symbol)->getValue());
                 break;
             case 1:
-                ASSERT_EQ("B", symbol->getValue());
+                ASSERT_EQ("B", ((NonTerminalSymbol<std::string>*) symbol)->getValue());
         }
         ++cleanRule1ValueSymbolIndex;
     });
 
     auto cleanRule2 = grammarForCleaning->getProductionRule(1);
-    ASSERT_EQ(A->getValue(), cleanRule2->getFirstKeySymbol()->getValue());
-    ASSERT_EQ(1, cleanRule2->valueLength());
-    ASSERT_EQ(a->getValue(), cleanRule2->getLastValueSymbol()->getValue());
+    ASSERT_EQ(A->getValue(), ((NonTerminalSymbol<std::string>*) cleanRule2->getFirstKeySymbol())->getValue());
+    ASSERT_EQ((unsigned) 1, cleanRule2->valueLength());
+    ASSERT_EQ(a->getValue(), ((TerminalSymbol<char>*) cleanRule2->getLastValueSymbol())->getValue());
 
     auto cleanRule3 = grammarForCleaning->getProductionRule(2);
-    ASSERT_EQ(B->getValue(), cleanRule3->getFirstKeySymbol()->getValue());
-    ASSERT_EQ(2, cleanRule3->valueLength());
+    ASSERT_EQ(B->getValue(), ((TerminalSymbol<std::string>*) cleanRule3->getFirstKeySymbol())->getValue());
+    ASSERT_EQ((unsigned) 2, cleanRule3->valueLength());
 
     int cleanRule3ValueSymbolIndex = 0;
-    cleanRule3->eachValueSymbol([&cleanRule3ValueSymbolIndex](Symbol<std::string>* symbol) {
+    cleanRule3->eachValueSymbol([&cleanRule3ValueSymbolIndex](Symbol* symbol) {
         switch (cleanRule3ValueSymbolIndex) {
             case 0:
-                ASSERT_EQ("b", symbol->getValue());
+                ASSERT_EQ('b', ((TerminalSymbol<char>*) symbol)->getValue());
                 break;
             case 1:
-                ASSERT_EQ("C", symbol->getValue());
+                ASSERT_EQ("C", ((NonTerminalSymbol<std::string>*) symbol)->getValue());
         }
         ++cleanRule3ValueSymbolIndex;
     });
 
     auto cleanRule4 = grammarForCleaning->getProductionRule(3);
-    ASSERT_EQ(C->getValue(), cleanRule4->getFirstKeySymbol()->getValue());
-    ASSERT_EQ(1, cleanRule4->valueLength());
-    ASSERT_EQ(c->getValue(), cleanRule4->getLastValueSymbol()->getValue());
+    ASSERT_EQ(C->getValue(), ((NonTerminalSymbol<std::string>*) cleanRule4->getFirstKeySymbol())->getValue());
+    ASSERT_EQ((unsigned) 1, cleanRule4->valueLength());
+    ASSERT_EQ(c->getValue(), ((TerminalSymbol<char>*) cleanRule4->getLastValueSymbol())->getValue());
 }

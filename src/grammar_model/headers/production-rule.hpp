@@ -9,18 +9,17 @@
 #include "symbol.hpp"
 #include "symbol-type.hpp"
 
-template<typename T>
 class ProductionRule {
 protected:
-    std::list<Symbol<T>*> key;
-    std::list<Symbol<T>*> value;
+    std::list<Symbol*> key;
+    std::list<Symbol*> value;
 
 public:
-    void setKey(std::list<Symbol<T>*> key) {
+    void setKey(std::list<Symbol*> key) {
         this->key = key;
     }
 
-    void setValue(std::list<Symbol<T>*> value) {
+    void setValue(std::list<Symbol*> value) {
         this->value = value;
     }
 
@@ -32,15 +31,15 @@ public:
         return value.size();
     }
 
-    Symbol<T>* getFirstKeySymbol() {
+    Symbol* getFirstKeySymbol() {
         return key.front();
     }
 
-    Symbol<T>* getLastValueSymbol() {
+    Symbol* getLastValueSymbol() {
         return value.back();
     }
 
-    void eachValueSymbol(std::function<void(Symbol<T>*)> action) const {
+    void eachValueSymbol(std::function<void(Symbol*)> action) const {
         std::for_each(value.begin(), value.end(), action);
     }
 
@@ -54,29 +53,6 @@ public:
         }
 
         return leftHandSideHasNonTerminal;
-    }
-
-    void print() {
-        for (auto k : key) {
-            std::cout << k->getValue();
-        }
-
-        std::cout << " -> ";
-
-        for (auto v : value) {
-            std::cout << v->getValue();
-        }
-
-        std::cout << "\n";
-
-        if (this->isValid()) {
-            std::cout << "The rule is valid";
-        }
-        else {
-            std::cout << "The rule is NOT valid";
-        }
-
-        std::cout << std::endl;
     }
 };
 

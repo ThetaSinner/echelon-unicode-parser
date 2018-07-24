@@ -17,12 +17,11 @@
 
 namespace echelon { namespace grammar_utilities { namespace cleaning {
 
-template<typename T>
 class GrammarCleaner {
 
     void applyCleaning(
-        Grammar<T> *grammar, 
-        const std::map<ProductionRule<T>*, CleanStatus> &rule_status
+        Grammar *grammar, 
+        const std::map<ProductionRule*, CleanStatus> &rule_status
     ) {
         for (auto& rs_pair : rule_status) {
             if (rs_pair.second == CleanStatus::IsNonProductive) {
@@ -32,11 +31,11 @@ class GrammarCleaner {
     }
 
     void applyCleaning(
-        Grammar<T> *grammar, 
-        const std::map<Symbol<T>*, CleanStatus> &non_terminal_status
+        Grammar *grammar, 
+        const std::map<Symbol*, CleanStatus> &non_terminal_status
     ) {
-        std::list<ProductionRule<T>*> rules_to_remove;
-        grammar->eachRule([&rules_to_remove, &non_terminal_status](ProductionRule<T> *rule) {
+        std::list<ProductionRule*> rules_to_remove;
+        grammar->eachRule([&rules_to_remove, &non_terminal_status](ProductionRule *rule) {
             if (non_terminal_status.at(rule->getFirstKeySymbol()) == CleanStatus::IsNotReachable) {
                 rules_to_remove.push_front(rule);
             }
@@ -47,19 +46,19 @@ class GrammarCleaner {
         }
     }
 
-    bool removeNonProductiveRules(Grammar<T> *grammar, echelon::diagnostics::Reason *reason) {
-        if (!ChomskyTest<std::string>::isContextFree(grammar)) {
+    bool removeNonProductiveRules(Grammar *grammar, echelon::diagnostics::Reason *reason) {
+        if (!ChomskyTest::isContextFree(grammar)) {
             reason->addReason("Do not know how to clean the grammar because it is not context free");
             return false;
         }
 
-        std::map<ProductionRule<T>*, CleanStatus> rule_status;
-        grammar->eachRule([&rule_status](ProductionRule<T> *rule) {
+        std::map<ProductionRule*, CleanStatus> rule_status;
+        grammar->eachRule([&rule_status](ProductionRule *rule) {
             rule_status[rule] = CleanStatus::DoNotKnow;
         });
 
-        std::map<Symbol<T>*, CleanStatus> non_terminal_status;
-        grammar->eachNonTerminal([&non_terminal_status](Symbol<T> *non_terminal) {
+        std::map<Symbol*, CleanStatus> non_terminal_status;
+        grammar->eachNonTerminal([&non_terminal_status](Symbol *non_terminal) {
             non_terminal_status[non_terminal] = CleanStatus::DoNotKnow;
         });
 
@@ -74,7 +73,7 @@ class GrammarCleaner {
                 }
 
                 int numberUnknown = rs_pair.first->valueLength();
-                rs_pair.first->eachValueSymbol([&numberUnknown, &non_terminal_status](Symbol<T> *symbol) {
+                rs_pair.first->eachValueSymbol([&numberUnknown, &non_terminal_status](Symbol *symbol) {
                     if (symbol->getType() == SymbolType::Terminal || non_terminal_status[symbol] == CleanStatus::IsProductive) {
                         --numberUnknown;
                     }
@@ -111,15 +110,15 @@ class GrammarCleaner {
         return true;
     }
 
-    bool removeUnreachableNonTerminals(Grammar<T> *grammar, echelon::diagnostics::Reason *reason) {
-        std::map<Symbol<T>*, CleanStatus> non_terminal_status;
-        grammar->eachNonTerminal([&non_terminal_status](Symbol<T> *non_terminal) {
+    bool removeUnreachableNonTerminals(Grammar *grammar, echelon::diagnostics::Reason *reason) {
+        std::map<Symbol*, CleanStatus> non_terminal_status;
+        grammar->eachNonTerminal([&non_terminal_status](Symbol *non_terminal) {
             non_terminal_status[non_terminal] = CleanStatus::DoNotKnow;
         });
 
         // optimisation only, not required.
-        std::map<ProductionRule<T>*, CleanStatus> production_rules;
-        grammar->eachRule([&production_rules](ProductionRule<T> *rule) {
+        std::map<ProductionRule*, CleanStatus> production_rules;
+        grammar->eachRule([&production_rules](ProductionRule *rule) {
             production_rules[rule] = CleanStatus::DoNotKnow;
         });
 
@@ -131,7 +130,7 @@ class GrammarCleaner {
         while (number_of_symbols_marked != 0) {
             number_of_symbols_marked = 0;
 
-            grammar->eachRule([&non_terminal_status, &production_rules, &number_of_symbols_marked](ProductionRule<T> *rule) {
+            grammar->eachRule([&non_terminal_status, &production_rules, &number_of_symbols_marked](ProductionRule *rule) {
                 if (production_rules[rule] != CleanStatus::DoNotKnow) {
                     return;
                 }
@@ -140,7 +139,7 @@ class GrammarCleaner {
                     // Don't test this rule again.
                     production_rules[rule] = CleanStatus::IsReachable;
 
-                    rule->eachValueSymbol([&non_terminal_status, &number_of_symbols_marked](Symbol<T>* symbol) {
+                    rule->eachValueSymbol([&non_terminal_status, &number_of_symbols_marked](Symbol* symbol) {
                         if (symbol->getType() == SymbolType::NonTerminal) {
                             if (non_terminal_status[symbol] == CleanStatus::DoNotKnow) {
                                 non_terminal_status[symbol] = CleanStatus::IsReachable;
@@ -163,7 +162,7 @@ class GrammarCleaner {
         return true;
     }
 public:
-    bool clean(Grammar<T> *grammar, echelon::diagnostics::Reason *reason) {
+    bool clean(Grammar *grammar, echelon::diagnostics::Reason *reason) {
         if (!removeNonProductiveRules(grammar, reason)) {
             return false;
         }

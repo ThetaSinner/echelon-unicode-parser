@@ -3,21 +3,22 @@
 
 #include "symbol-type.hpp"
 
-template<typename T>
+typedef unsigned long SymbolId;
+
 class Symbol {
-    T value;
+    SymbolId id = 0;
 
 public:
-    virtual T getValue() {
-        return this->value;
+    SymbolId getId() {
+        return id;
     }
 
-    virtual void setValue(T value) {
-        this->value = value;
+    void setId(SymbolId id) {
+        this->id = id;
     }
 
     virtual bool equals(const Symbol *const other) const {
-        return other != nullptr && this->value == other->value;
+        return other != nullptr && this->id == other->id;
     }
 
     virtual SymbolType getType() = 0;

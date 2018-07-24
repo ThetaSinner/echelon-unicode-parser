@@ -11,14 +11,13 @@ namespace echelon { namespace grammar_utilities {
 
 using namespace echelon::grammar_model;
 
-template<typename T>
 class ChomskyTest {
 public:
-    static bool isTypeZero(const Grammar<T> *const grammar) {
+    static bool isTypeZero(const Grammar *const grammar) {
         return grammar->isValid(nullptr);
     }
 
-    static bool isTypeOne(const Grammar<T> *const grammar) {
+    static bool isTypeOne(const Grammar *const grammar) {
         if (!ChomskyTest::isTypeZero(grammar)) {
             return false;
         }
@@ -33,7 +32,7 @@ public:
         return !hasNonMonotonicRule;
     }
 
-    static bool isTypeTwo(const Grammar<T> *const grammar) {
+    static bool isTypeTwo(const Grammar *const grammar) {
         if(!ChomskyTest::isTypeOne(grammar)) {
             return false;
         }
@@ -48,7 +47,7 @@ public:
         return !hasRuleWithKeyOtherThanSingleNonTerminal;
     }
 
-    static bool isTypeThree(const Grammar<T> *const grammar) {
+    static bool isTypeThree(const Grammar *const grammar) {
         if (!ChomskyTest::isTypeTwo(grammar)) {
             return false;
         }
@@ -72,15 +71,15 @@ public:
         return !hasInvalidTypeThreeRule;
     }
 
-    static bool isContextSensitive(const Grammar<T> *const grammar) {
+    static bool isContextSensitive(const Grammar *const grammar) {
         return isTypeOne(grammar);
     }
 
-    static bool isContextFree(const Grammar<T> *const grammar) {
+    static bool isContextFree(const Grammar *const grammar) {
         return isTypeTwo(grammar);
     }
 
-    static bool isRegular(const Grammar<T> *const grammar) {
+    static bool isRegular(const Grammar *const grammar) {
         return isTypeThree(grammar);
     }
 };

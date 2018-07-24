@@ -12,7 +12,7 @@ protected:
     CleanableTerminalSymbol() {
         clean_status = CleanStatus::DoNotKnow
     }
-    
+
 public:
     CleanStatus getCleanStatus() {
         return clean_status;

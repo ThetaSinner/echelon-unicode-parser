@@ -19,18 +19,18 @@ TEST(ChomskyTest, ValidTypeThreeGrammar) {
   auto *b = new TerminalSymbol<std::string>();
   b->setValue("b");
 
-  auto *rule = new ProductionRule<std::string>();
+  auto *rule = new ProductionRule();
   rule->setKey({T});
   rule->setValue({b});
 
-  Grammar<std::string> grammar;
+  Grammar grammar;
   grammar.setStartSymbol(T);
 
   grammar.addNonTerminal(T);
   grammar.addTerminal(b);
   grammar.addProductionRule(rule);
 
-  ASSERT_TRUE(ChomskyTest<std::string>::isTypeThree(&grammar));
+  ASSERT_TRUE(ChomskyTest::isTypeThree(&grammar));
 }
 
 int main(int argc, char **argv) {

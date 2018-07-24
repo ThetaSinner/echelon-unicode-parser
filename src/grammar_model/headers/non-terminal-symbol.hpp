@@ -5,10 +5,20 @@
 #include "symbol-type.hpp"
 
 template<typename T>
-class NonTerminalSymbol : public Symbol<T>  {
+class NonTerminalSymbol : public Symbol  {
+    T value;
+
 public:
     SymbolType getType() override {
         return SymbolType::NonTerminal;
+    }
+
+    T getValue() const {
+        return value;
+    }
+
+    void setValue(T value) {
+        this->value = value;
     }
 };
 

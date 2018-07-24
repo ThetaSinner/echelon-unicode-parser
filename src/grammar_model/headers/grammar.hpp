@@ -13,35 +13,34 @@
 
 namespace echelon { namespace grammar_model {
 
-template<typename T>
 class Grammar {
-    std::vector<Symbol<T>*> terminals;
-    std::vector<Symbol<T>*> non_terminals;
-    Symbol<T>* start_symbol;
-    std::vector<ProductionRule<T>*> production_rules;
+    std::vector<Symbol*> terminals;
+    std::vector<Symbol*> non_terminals;
+    Symbol* start_symbol;
+    std::vector<ProductionRule*> production_rules;
 
 public:
-    void addTerminal(Symbol<T>* terminal) {
+    void addTerminal(Symbol* terminal) {
         terminals.push_back(terminal);
     }
 
-    void addNonTerminal(Symbol<T>* non_terminal) {
+    void addNonTerminal(Symbol* non_terminal) {
         non_terminals.push_back(non_terminal);
     }
 
-    void setStartSymbol(Symbol<T>* start_symbol) {
+    void setStartSymbol(Symbol* start_symbol) {
         this->start_symbol = start_symbol;
     }
 
-    Symbol<T>* getStartSymbol() {
+    Symbol* getStartSymbol() {
         return start_symbol;
     }
 
-    void addProductionRule(ProductionRule<T>* production_rule) {
+    void addProductionRule(ProductionRule* production_rule) {
         production_rules.push_back(production_rule);
     }
 
-    ProductionRule<T>* getProductionRule(unsigned index) {
+    ProductionRule* getProductionRule(unsigned index) {
         return production_rules[index];
     }
 
@@ -49,15 +48,15 @@ public:
         return production_rules.size();
     }
 
-    void eachRule(std::function<void(ProductionRule<T>*)> action) const {
+    void eachRule(std::function<void(ProductionRule*)> action) const {
         std::for_each(production_rules.begin(), production_rules.end(), action);
     }
 
-    void eachNonTerminal(std::function<void(Symbol<T>*)> action) const {
+    void eachNonTerminal(std::function<void(Symbol*)> action) const {
         std::for_each(non_terminals.begin(), non_terminals.end(), action);
     }
 
-    void removeProductionRule(ProductionRule<T>* production_rule) {        
+    void removeProductionRule(ProductionRule* production_rule) {        
         production_rules.erase(std::remove(production_rules.begin(), production_rules.end(), production_rule), production_rules.end());
     }
 
@@ -105,40 +104,6 @@ public:
         }
 
         return true;
-    }
-
-    void print() {
-        std::cout << "The start symbol is " << start_symbol->getValue() << "\n";
-
-        if (production_rules.size() == 0) {
-            std::cout << "No rules\n";
-        }
-        else if (production_rules.size() == 1) {
-            std::cout << "There is 1 rule. It is\n";
-        }
-        else {
-            std::cout << "There are " << production_rules.size() << " rules. They are\n";
-        }
-
-        for (auto pr : production_rules) {
-            pr->print();
-        }
-
-        std::cout << "\n";
-
-        auto *reason = new echelon::diagnostics::Reason();
-        if (this->isValid(reason)) {
-            std::cout << "The grammar is valid\n";
-        }
-        else {
-            std::cout << "The grammar is NOT valid\n";
-
-            std::stringstream ss;
-            reason->replay(ss);
-            std::cout << ss.str() << std::endl;
-        }
-
-        std::cout << std::endl;
     }
 };
 

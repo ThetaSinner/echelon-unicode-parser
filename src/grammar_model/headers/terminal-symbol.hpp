@@ -4,11 +4,21 @@
 #include "symbol.hpp"
 #include "symbol-type.hpp"
 
-template<typename T>
-class TerminalSymbol : public Symbol<T>  {
+template<typename Tc>
+class TerminalSymbol : public Symbol {
+    Tc value;
+
 public:
     SymbolType getType() override {
         return SymbolType::Terminal;
+    }
+
+    Tc getValue() {
+        return value;
+    }
+
+    void setValue(Tc value) {
+        this->value = value;
     }
 };
 
