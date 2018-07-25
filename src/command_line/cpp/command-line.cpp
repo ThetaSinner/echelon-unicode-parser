@@ -2,6 +2,7 @@
 #include <string>
 #include <iostream>
 #include <vector>
+#include <memory>
 
 #include "grammar-parser.hpp"
 #include "terminal-symbol.hpp"
@@ -44,7 +45,7 @@ int main(int argc, char** argv) {
     GrammarParser grammarParser;
     grammarParser.test();
 
-    auto *symbol_T = new NonTerminalSymbol<std::string>();
+    auto symbol_T = std::make_shared<NonTerminalSymbol<std::string>>();
     symbol_T->setValue("T");
     
     if (symbol_T->getType() == SymbolType::NonTerminal) {
@@ -54,7 +55,7 @@ int main(int argc, char** argv) {
         std::cout << "symbol_T is a terminal\n";
     }
 
-    auto *symbol_b = new TerminalSymbol<std::string>();
+    auto symbol_b = std::make_shared<TerminalSymbol<std::string>>();
     symbol_b->setValue("b");
 
     if (symbol_b->getType() == SymbolType::NonTerminal) {
@@ -64,11 +65,11 @@ int main(int argc, char** argv) {
         std::cout << "symbol_b is a terminal\n";
     }
 
-    auto r = new ProductionRule();
+    auto r = std::make_shared<ProductionRule>();
     r->setKey({symbol_T});
     r->setValue({symbol_b});
 
-    auto badRule = new ProductionRule();
+    auto badRule = std::make_shared<ProductionRule>();
     badRule->setKey({symbol_b});
     badRule->setValue({symbol_T});
 
@@ -83,51 +84,59 @@ int main(int argc, char** argv) {
         gen->moveNext();
     }
 
-    auto *symbol_Expr = new NonTerminalSymbol<char>();
+    auto symbol_Expr = std::make_shared<NonTerminalSymbol<char>>();
     symbol_Expr->setValue('E');
+    symbol_Expr->setId(1);
 
-    auto *symbol_Term = new NonTerminalSymbol<std::string>();
+    auto symbol_Term = std::make_shared<NonTerminalSymbol<std::string>>();
     symbol_Term->setValue("T");
+    symbol_Term->setId(2);
 
-    auto *symbol_Factor = new NonTerminalSymbol<std::string>();
+    auto symbol_Factor = std::make_shared<NonTerminalSymbol<std::string>>();
     symbol_Factor->setValue("F");
+    symbol_Factor->setId(3);
 
-    auto *symbol_plus = new TerminalSymbol<std::string>();
+    auto symbol_plus = std::make_shared<TerminalSymbol<std::string>>();
     symbol_plus->setValue("+");
+    symbol_plus->setId(400);
 
-    auto *symbol_times = new TerminalSymbol<std::string>();
+    auto symbol_times = std::make_shared<TerminalSymbol<std::string>>();
     symbol_times->setValue("x");
+    symbol_times->setId(401);
 
-    auto *symbol_open_paren = new TerminalSymbol<std::string>();
+    auto symbol_open_paren = std::make_shared<TerminalSymbol<std::string>>();
     symbol_open_paren->setValue("(");
+    symbol_open_paren->setId(403);
 
-    auto *symbol_close_paren = new TerminalSymbol<std::string>();
+    auto symbol_close_paren = std::make_shared<TerminalSymbol<std::string>>();
     symbol_close_paren->setValue(")");
+    symbol_close_paren->setId(404);
 
-    auto *symbol_i = new TerminalSymbol<std::string>();
+    auto symbol_i = std::make_shared<TerminalSymbol<std::string>>();
     symbol_i->setValue("i");
+    symbol_i->setId(500);
 
-    auto *rule_expr_recurse = new ProductionRule();
+    auto rule_expr_recurse = std::make_shared<ProductionRule>();
     rule_expr_recurse->setKey({symbol_Expr});
     rule_expr_recurse->setValue({symbol_Expr, symbol_plus, symbol_Term});
 
-    auto *rule_expr_to_term = new ProductionRule();
+    auto rule_expr_to_term = std::make_shared<ProductionRule>();
     rule_expr_to_term->setKey({symbol_Expr});
     rule_expr_to_term->setValue({symbol_Term});
 
-    auto *rule_term_recurse = new ProductionRule();
+    auto rule_term_recurse = std::make_shared<ProductionRule>();
     rule_term_recurse->setKey({symbol_Term});
     rule_term_recurse->setValue({symbol_Term, symbol_times, symbol_Factor});
 
-    auto *rule_term_to_factor = new ProductionRule();
+    auto rule_term_to_factor = std::make_shared<ProductionRule>();
     rule_term_to_factor->setKey({symbol_Term});
     rule_term_to_factor->setValue({symbol_Factor});
 
-    auto *rule_factor_nest_expr = new ProductionRule();
+    auto rule_factor_nest_expr = std::make_shared<ProductionRule>();
     rule_factor_nest_expr->setKey({symbol_Factor});
     rule_factor_nest_expr->setValue({symbol_open_paren, symbol_Expr, symbol_close_paren});
 
-    auto *rule_factor_to_i = new ProductionRule();
+    auto rule_factor_to_i = std::make_shared<ProductionRule>();
     rule_factor_to_i->setKey({symbol_Factor});
     rule_factor_to_i->setValue({symbol_i});
 

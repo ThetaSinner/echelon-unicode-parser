@@ -5,21 +5,22 @@
 #include <iostream>
 #include <functional>
 #include <algorithm>
+#include <memory>
 
 #include "symbol.hpp"
 #include "symbol-type.hpp"
 
 class ProductionRule {
 protected:
-    std::list<Symbol*> key;
-    std::list<Symbol*> value;
+    std::list<std::shared_ptr<Symbol>> key;
+    std::list<std::shared_ptr<Symbol>> value;
 
 public:
-    void setKey(std::list<Symbol*> key) {
+    void setKey(std::list<std::shared_ptr<Symbol>> key) {
         this->key = key;
     }
 
-    void setValue(std::list<Symbol*> value) {
+    void setValue(std::list<std::shared_ptr<Symbol>> value) {
         this->value = value;
     }
 
@@ -31,15 +32,15 @@ public:
         return value.size();
     }
 
-    Symbol* getFirstKeySymbol() {
+    std::shared_ptr<Symbol> getFirstKeySymbol() {
         return key.front();
     }
 
-    Symbol* getLastValueSymbol() {
+    std::shared_ptr<Symbol> getLastValueSymbol() {
         return value.back();
     }
 
-    void eachValueSymbol(std::function<void(Symbol*)> action) const {
+    void eachValueSymbol(std::function<void(std::shared_ptr<Symbol>)> action) const {
         std::for_each(value.begin(), value.end(), action);
     }
 

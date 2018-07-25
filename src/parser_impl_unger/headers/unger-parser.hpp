@@ -21,6 +21,12 @@ public:
 
         std::shared_ptr<Symbol> start_symbol(grammar->getStartSymbol());
         ParseTree::createWithSymbol(start_symbol);
+
+        grammar->eachRule([&start_symbol](auto production_rule) {
+            if (!production_rule->getFirstKeySymbol()->equals(start_symbol)) {
+                return;
+            }
+        });
     }
 };
 

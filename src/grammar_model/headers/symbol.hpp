@@ -1,6 +1,8 @@
 #ifndef SYMBOL_HPP_INCLUDED
 #define SYMBOL_HPP_INCLUDED
 
+#include <memory>
+
 #include "symbol-type.hpp"
 
 typedef unsigned long SymbolId;
@@ -17,7 +19,7 @@ public:
         this->id = id;
     }
 
-    virtual bool equals(const Symbol *const other) const {
+    virtual bool equals(const std::shared_ptr<const Symbol> other) const {
         return other != nullptr && this->id == other->id;
     }
 

@@ -5,6 +5,7 @@
 #include <algorithm>
 #include <functional>
 #include <sstream>
+#include <memory>
 
 #include "reason.hpp"
 
@@ -14,33 +15,33 @@
 namespace echelon { namespace grammar_model {
 
 class Grammar {
-    std::vector<Symbol*> terminals;
-    std::vector<Symbol*> non_terminals;
-    Symbol* start_symbol;
-    std::vector<ProductionRule*> production_rules;
+    std::vector<std::shared_ptr<Symbol>> terminals;
+    std::vector<std::shared_ptr<Symbol>> non_terminals;
+    std::shared_ptr<Symbol> start_symbol;
+    std::vector<std::shared_ptr<ProductionRule>> production_rules;
 
 public:
-    void addTerminal(Symbol* terminal) {
+    void addTerminal(std::shared_ptr<Symbol> terminal) {
         terminals.push_back(terminal);
     }
 
-    void addNonTerminal(Symbol* non_terminal) {
+    void addNonTerminal(std::shared_ptr<Symbol> non_terminal) {
         non_terminals.push_back(non_terminal);
     }
 
-    void setStartSymbol(Symbol* start_symbol) {
-        this->start_symbol = start_symbol;
+    void setStartSymbol(std::shared_ptr<Symbol> start_symbol) {
+        this->start_symbol = std::shared_ptr<Symbol>(start_symbol);
     }
 
-    Symbol* getStartSymbol() {
+    std::shared_ptr<Symbol> getStartSymbol() {
         return start_symbol;
     }
 
-    void addProductionRule(ProductionRule* production_rule) {
+    void addProductionRule(std::shared_ptr<ProductionRule> production_rule) {
         production_rules.push_back(production_rule);
     }
 
-    ProductionRule* getProductionRule(unsigned index) {
+    std::shared_ptr<ProductionRule> getProductionRule(unsigned index) {
         return production_rules[index];
     }
 
@@ -48,15 +49,15 @@ public:
         return production_rules.size();
     }
 
-    void eachRule(std::function<void(ProductionRule*)> action) const {
+    void eachRule(std::function<void(std::shared_ptr<ProductionRule>)> action) const {
         std::for_each(production_rules.begin(), production_rules.end(), action);
     }
 
-    void eachNonTerminal(std::function<void(Symbol*)> action) const {
+    void eachNonTerminal(std::function<void(std::shared_ptr<Symbol>)> action) const {
         std::for_each(non_terminals.begin(), non_terminals.end(), action);
     }
 
-    void removeProductionRule(ProductionRule* production_rule) {        
+    void removeProductionRule(std::shared_ptr<ProductionRule> production_rule) {        
         production_rules.erase(std::remove(production_rules.begin(), production_rules.end(), production_rule), production_rules.end());
     }
 

@@ -13,13 +13,13 @@ using namespace echelon::grammar_model;
 using namespace echelon::grammar_utilities;
 
 TEST(ChomskyTest, ValidTypeThreeGrammar) {
-  auto *T = new NonTerminalSymbol<std::string>();
+  auto T = std::make_shared<NonTerminalSymbol<std::string>>();
   T->setValue("T");
 
-  auto *b = new TerminalSymbol<std::string>();
+  auto b = std::make_shared<TerminalSymbol<std::string>>();
   b->setValue("b");
 
-  auto *rule = new ProductionRule();
+  auto rule = std::make_shared<ProductionRule>();
   rule->setKey({T});
   rule->setValue({b});
 

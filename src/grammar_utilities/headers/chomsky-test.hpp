@@ -23,7 +23,7 @@ public:
         }
 
         bool hasNonMonotonicRule = false;
-        grammar->eachRule([&hasNonMonotonicRule](auto *production_rule) {
+        grammar->eachRule([&hasNonMonotonicRule](auto production_rule) {
             if (production_rule->keyLength() > production_rule->valueLength()) {
                 hasNonMonotonicRule = true;
             }
@@ -38,7 +38,7 @@ public:
         }
 
         bool hasRuleWithKeyOtherThanSingleNonTerminal = false;
-        grammar->eachRule([&hasRuleWithKeyOtherThanSingleNonTerminal](auto *production_rule) {
+        grammar->eachRule([&hasRuleWithKeyOtherThanSingleNonTerminal](auto production_rule) {
             if (production_rule->keyLength() != 1 || production_rule->getFirstKeySymbol()->getType() != SymbolType::NonTerminal) {
                 hasRuleWithKeyOtherThanSingleNonTerminal = true;
             }
@@ -53,9 +53,9 @@ public:
         }
 
         bool hasInvalidTypeThreeRule = false;
-        grammar->eachRule([&hasInvalidTypeThreeRule](auto *production_rule) {
+        grammar->eachRule([&hasInvalidTypeThreeRule](auto production_rule) {
             unsigned terminalSymbolCount = 0;
-            production_rule->eachValueSymbol([&terminalSymbolCount](auto *symbol) {
+            production_rule->eachValueSymbol([&terminalSymbolCount](auto symbol) {
                 if (symbol->getType() == SymbolType::Terminal) {
                     ++terminalSymbolCount;
                 }

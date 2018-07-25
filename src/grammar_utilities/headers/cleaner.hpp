@@ -3,6 +3,7 @@
 
 #include <map>
 #include <list>
+#include <memory>
 
 #include "grammar.hpp"
 #include "production-rule.hpp"
@@ -21,7 +22,7 @@ class GrammarCleaner {
 
     void applyCleaning(
         Grammar *grammar, 
-        const std::map<ProductionRule*, CleanStatus> &rule_status
+        const std::map<std::shared_ptr<ProductionRule>, CleanStatus> &rule_status
     ) {
         for (auto& rs_pair : rule_status) {
             if (rs_pair.second == CleanStatus::IsNonProductive) {
@@ -32,10 +33,10 @@ class GrammarCleaner {
 
     void applyCleaning(
         Grammar *grammar, 
-        const std::map<Symbol*, CleanStatus> &non_terminal_status
+        const std::map<std::shared_ptr<Symbol>, CleanStatus> &non_terminal_status
     ) {
-        std::list<ProductionRule*> rules_to_remove;
-        grammar->eachRule([&rules_to_remove, &non_terminal_status](ProductionRule *rule) {
+        std::list<std::shared_ptr<ProductionRule>> rules_to_remove;
+        grammar->eachRule([&rules_to_remove, &non_terminal_status](std::shared_ptr<ProductionRule> rule) {
             if (non_terminal_status.at(rule->getFirstKeySymbol()) == CleanStatus::IsNotReachable) {
                 rules_to_remove.push_front(rule);
             }
@@ -52,13 +53,13 @@ class GrammarCleaner {
             return false;
         }
 
-        std::map<ProductionRule*, CleanStatus> rule_status;
-        grammar->eachRule([&rule_status](ProductionRule *rule) {
+        std::map<std::shared_ptr<ProductionRule>, CleanStatus> rule_status;
+        grammar->eachRule([&rule_status](std::shared_ptr<ProductionRule> rule) {
             rule_status[rule] = CleanStatus::DoNotKnow;
         });
 
-        std::map<Symbol*, CleanStatus> non_terminal_status;
-        grammar->eachNonTerminal([&non_terminal_status](Symbol *non_terminal) {
+        std::map<std::shared_ptr<Symbol>, CleanStatus> non_terminal_status;
+        grammar->eachNonTerminal([&non_terminal_status](std::shared_ptr<Symbol> non_terminal) {
             non_terminal_status[non_terminal] = CleanStatus::DoNotKnow;
         });
 
@@ -73,7 +74,7 @@ class GrammarCleaner {
                 }
 
                 int numberUnknown = rs_pair.first->valueLength();
-                rs_pair.first->eachValueSymbol([&numberUnknown, &non_terminal_status](Symbol *symbol) {
+                rs_pair.first->eachValueSymbol([&numberUnknown, &non_terminal_status](std::shared_ptr<Symbol> symbol) {
                     if (symbol->getType() == SymbolType::Terminal || non_terminal_status[symbol] == CleanStatus::IsProductive) {
                         --numberUnknown;
                     }
@@ -111,14 +112,14 @@ class GrammarCleaner {
     }
 
     bool removeUnreachableNonTerminals(Grammar *grammar, echelon::diagnostics::Reason *reason) {
-        std::map<Symbol*, CleanStatus> non_terminal_status;
-        grammar->eachNonTerminal([&non_terminal_status](Symbol *non_terminal) {
+        std::map<std::shared_ptr<Symbol>, CleanStatus> non_terminal_status;
+        grammar->eachNonTerminal([&non_terminal_status](std::shared_ptr<Symbol> non_terminal) {
             non_terminal_status[non_terminal] = CleanStatus::DoNotKnow;
         });
 
         // optimisation only, not required.
-        std::map<ProductionRule*, CleanStatus> production_rules;
-        grammar->eachRule([&production_rules](ProductionRule *rule) {
+        std::map<std::shared_ptr<ProductionRule>, CleanStatus> production_rules;
+        grammar->eachRule([&production_rules](std::shared_ptr<ProductionRule> rule) {
             production_rules[rule] = CleanStatus::DoNotKnow;
         });
 
@@ -130,7 +131,7 @@ class GrammarCleaner {
         while (number_of_symbols_marked != 0) {
             number_of_symbols_marked = 0;
 
-            grammar->eachRule([&non_terminal_status, &production_rules, &number_of_symbols_marked](ProductionRule *rule) {
+            grammar->eachRule([&non_terminal_status, &production_rules, &number_of_symbols_marked](std::shared_ptr<ProductionRule> rule) {
                 if (production_rules[rule] != CleanStatus::DoNotKnow) {
                     return;
                 }
@@ -139,7 +140,7 @@ class GrammarCleaner {
                     // Don't test this rule again.
                     production_rules[rule] = CleanStatus::IsReachable;
 
-                    rule->eachValueSymbol([&non_terminal_status, &number_of_symbols_marked](Symbol* symbol) {
+                    rule->eachValueSymbol([&non_terminal_status, &number_of_symbols_marked](std::shared_ptr<Symbol> symbol) {
                         if (symbol->getType() == SymbolType::NonTerminal) {
                             if (non_terminal_status[symbol] == CleanStatus::DoNotKnow) {
                                 non_terminal_status[symbol] = CleanStatus::IsReachable;
