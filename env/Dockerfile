@@ -23,12 +23,13 @@ RUN echo oracle-java10-installer shared/accepted-oracle-license-v1-1 select true
     java --version
 
 RUN mkdir -p /opt/gradle && cd /opt/gradle && \
-    wget https://downloads.gradle.org/distributions/gradle-4.7-bin.zip && \
-    unzip gradle-4.7-bin.zip && \
-    export PATH=$PATH:/opt/gradle/gradle-4.7/bin && \
+    wget https://downloads.gradle.org/distributions/gradle-4.9-bin.zip && \
+    unzip gradle-4.9-bin.zip && \
+    export PATH=$PATH:/opt/gradle/gradle-4.9/bin && \
     cd / && \
     gradle --version
 
+# TODO update to 8.1 or newer
 RUN mkdir -p /opt/gcc && cd /opt/gcc && \
     wget ftp://ftp.mirrorservice.org/sites/sourceware.org/pub/gcc/releases/gcc-7.3.0/gcc-7.3.0.tar.gz && \
     tar xzf gcc-7.3.0.tar.gz && \
@@ -41,17 +42,5 @@ RUN mkdir -p /opt/gcc && cd /opt/gcc && \
     make -j 4 && \
     make install && \
     gcc-7.3.0 --version
-
-RUN mkdir -p /opt/antlr4 && cd /opt/antlr4 && \
-    wget http://www.antlr.org/download/antlr-4.7.1-complete.jar
-
-RUN apt-get install -y --no-install-recommends cmake uuid-dev pkg-config && \
-    mkdir -p /opt/antlr4-cpp-runtime-4.7.1-source && cd /opt/antlr4-cpp-runtime-4.7.1-source && \
-    wget http://www.antlr.org/download/antlr4-cpp-runtime-4.7.1-source.zip && \
-    unzip antlr4-cpp-runtime-4.7.1-source.zip && \
-    mkdir -p /opt/antlr4-cpp-runtime-4.7.1 && cd /opt/antlr4-cpp-runtime-4.7.1 && \
-    cmake ../antlr4-cpp-runtime-4.7.1-source -DCMAKE_BUILD_TYPE=Debug && \
-    make -j 2 && \
-    make install
 
 WORKDIR /development

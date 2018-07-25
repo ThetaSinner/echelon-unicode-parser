@@ -13,7 +13,7 @@ This launches a terminal. You're now in the latest Debian docker image with Grad
 
 Now, inside the environment, the project can be build by running
 ```cmd
-/opt/gradle/gradle-4.6/bin/gradle assemble
+/opt/gradle/gradle-4.9/bin/gradle assemble
 ```
 
 #### Building the development environment
