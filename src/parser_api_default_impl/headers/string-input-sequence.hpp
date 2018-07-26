@@ -20,6 +20,14 @@ public:
     void each(std::function<void(char&)> action) override {
         std::for_each(_input_sequence.begin(), _input_sequence.end(), action);
     }
+
+    StringInputSequence* getSubSequence(unsigned start, unsigned length) override {
+        if (length == 0) {
+            return nullptr;
+        }
+
+        return new StringInputSequence(_input_sequence.substr(start, length));
+    }
 };
     
 }}}

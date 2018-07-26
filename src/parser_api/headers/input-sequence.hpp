@@ -10,6 +10,7 @@ class InputSequence {
 public:
     virtual unsigned length() = 0;
     virtual void each(std::function<void(T&)> action) = 0;
+    virtual InputSequence<T>* getSubSequence(unsigned start, unsigned length) = 0;
 };
 
 }}}
