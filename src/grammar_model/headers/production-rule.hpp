@@ -12,15 +12,15 @@
 
 class ProductionRule {
 protected:
-    std::list<std::shared_ptr<Symbol>> key;
-    std::list<std::shared_ptr<Symbol>> value;
+    std::vector<std::shared_ptr<Symbol>> key;
+    std::vector<std::shared_ptr<Symbol>> value;
 
 public:
-    void setKey(std::list<std::shared_ptr<Symbol>> key) {
+    void setKey(std::vector<std::shared_ptr<Symbol>> key) {
         this->key = key;
     }
 
-    void setValue(std::list<std::shared_ptr<Symbol>> value) {
+    void setValue(std::vector<std::shared_ptr<Symbol>> value) {
         this->value = value;
     }
 
@@ -38,6 +38,10 @@ public:
 
     std::shared_ptr<Symbol> getLastValueSymbol() {
         return value.back();
+    }
+
+    const std::vector<std::shared_ptr<Symbol>>& getValues() const {
+        return value;
     }
 
     void eachValueSymbol(std::function<void(std::shared_ptr<Symbol>)> action) const {

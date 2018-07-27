@@ -4,20 +4,20 @@
 #include "symbol.hpp"
 #include "symbol-type.hpp"
 
-template<typename T>
+template<typename Tc>
 class NonTerminalSymbol : public Symbol  {
-    T value;
+    Tc value;
 
 public:
     SymbolType getType() override {
         return SymbolType::NonTerminal;
     }
 
-    T getValue() const {
+    Tc getValue() const {
         return value;
     }
 
-    void setValue(T value) {
+    void setValue(Tc value) {
         this->value = value;
     }
 };

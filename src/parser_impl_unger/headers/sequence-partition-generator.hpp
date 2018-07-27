@@ -6,6 +6,7 @@
 #include <utility>
 #include <memory>
 #include <iostream>
+#include <stdexcept>
 
 #include "input-sequence.hpp"
 #include "sequence-partition.hpp"

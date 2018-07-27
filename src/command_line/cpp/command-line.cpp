@@ -166,7 +166,8 @@ int main(int argc, char** argv) {
 
     using namespace echelon::parsing::impl::unger;
     UngerParser<char> parser;
-    parser.parse(simple_arithmetic_grammar, seq2);
+    parser.setGrammar(simple_arithmetic_grammar);
+    parser.parse(seq2);
 
     std::cout << "bye" << std::endl;
     return 0;

@@ -20,6 +20,10 @@ public:
         children.push_back(child_node);
     }
 
+    void addSubTree(std::shared_ptr<ParseTree> subTree) {
+        children.push_back(subTree);
+    }
+
 private:
     std::shared_ptr<Symbol> symbol;
     std::vector<std::shared_ptr<ParseTree>> children;
