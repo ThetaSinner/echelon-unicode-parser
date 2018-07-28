@@ -13,6 +13,8 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     gnupg \
     dirmngr \
     gcc-multilib \
+    # For GDB docs
+    texinfo \
     && apt-get clean
 
 RUN echo oracle-java10-installer shared/accepted-oracle-license-v1-1 select true | debconf-set-selections && \
@@ -42,5 +44,14 @@ RUN mkdir -p /opt/gcc && cd /opt/gcc && \
     make -j 4 && \
     make install && \
     gcc-7.3.0 --version
+
+RUN mkdir -p /opt/gdb && cd /opt/gdb && \
+    wget http://ftp.gnu.org/gnu/gdb/gdb-8.1.tar.xz && \
+    tar xf gdb-8.1.tar.xz && \
+    mkdir build && cd build && \
+    $PWD/../gdb-8.1/configure --program-suffix=-8.1 && \
+    make -j 4 && \
+    make install && \
+    gdb-8.1 --version
 
 WORKDIR /development

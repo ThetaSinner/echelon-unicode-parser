@@ -34,7 +34,8 @@ model {
     binaries {
         all {
             if (toolChain in Gcc) {
-                cppCompiler.args '-Wall', '-std=c++17'
+                // The -g flag adds debug symbols for gdb
+                cppCompiler.args '-Wall', '-std=c++17', '-g'
                 linker.args '-L/usr/local/lib'
             }
         }
