@@ -84,8 +84,8 @@ int main(int argc, char** argv) {
         gen->moveNext();
     }
 
-    auto symbol_Expr = std::make_shared<NonTerminalSymbol<char>>();
-    symbol_Expr->setValue('E');
+    auto symbol_Expr = std::make_shared<NonTerminalSymbol<std::string>>();
+    symbol_Expr->setValue("E");
     symbol_Expr->setId(1);
 
     auto symbol_Term = std::make_shared<NonTerminalSymbol<std::string>>();
@@ -96,24 +96,24 @@ int main(int argc, char** argv) {
     symbol_Factor->setValue("F");
     symbol_Factor->setId(3);
 
-    auto symbol_plus = std::make_shared<TerminalSymbol<std::string>>();
-    symbol_plus->setValue("+");
+    auto symbol_plus = std::make_shared<TerminalSymbol<char>>();
+    symbol_plus->setValue('+');
     symbol_plus->setId(400);
 
-    auto symbol_times = std::make_shared<TerminalSymbol<std::string>>();
-    symbol_times->setValue("x");
+    auto symbol_times = std::make_shared<TerminalSymbol<char>>();
+    symbol_times->setValue('x');
     symbol_times->setId(401);
 
-    auto symbol_open_paren = std::make_shared<TerminalSymbol<std::string>>();
-    symbol_open_paren->setValue("(");
+    auto symbol_open_paren = std::make_shared<TerminalSymbol<char>>();
+    symbol_open_paren->setValue('(');
     symbol_open_paren->setId(403);
 
-    auto symbol_close_paren = std::make_shared<TerminalSymbol<std::string>>();
-    symbol_close_paren->setValue(")");
+    auto symbol_close_paren = std::make_shared<TerminalSymbol<char>>();
+    symbol_close_paren->setValue(')');
     symbol_close_paren->setId(404);
 
-    auto symbol_i = std::make_shared<TerminalSymbol<std::string>>();
-    symbol_i->setValue("i");
+    auto symbol_i = std::make_shared<TerminalSymbol<char>>();
+    symbol_i->setValue('i');
     symbol_i->setId(500);
 
     auto rule_expr_recurse = std::make_shared<ProductionRule>();
@@ -167,7 +167,14 @@ int main(int argc, char** argv) {
     using namespace echelon::parsing::impl::unger;
     UngerParser<char> parser;
     parser.setGrammar(simple_arithmetic_grammar);
-    parser.parse(seq2);
+    auto tree = parser.parse(seq2);
+
+    if (tree != nullptr) {
+        std::cout << "weeeeeee!\n";
+    }
+    else {
+        std::cout << "No shock there then.\n";
+    }
 
     std::cout << "bye" << std::endl;
     return 0;

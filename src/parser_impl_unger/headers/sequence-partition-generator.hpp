@@ -26,8 +26,14 @@ public:
 
         std::vector<unsigned> initialPartition(numberOfSubSequences);
         initialPartition.assign(numberOfSubSequences, 0);
-        initialPartition[initialPartition.size() - 1] = inputSequence->length();
-        length_of_sequence = inputSequence->length();
+        
+        if (inputSequence == nullptr) {
+            length_of_sequence = 0;
+        }
+        else {
+            initialPartition[initialPartition.size() - 1] = inputSequence->length();
+            length_of_sequence = inputSequence->length();
+        }
         
         generation_tracking_stack.push(std::make_pair(
             numberOfSubSequences, 

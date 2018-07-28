@@ -33,7 +33,7 @@ public:
         return _input_sequence.length() == 1 && _input_sequence[0] == element;
     }
 };
-    
+
 }}}
 
 #endif // STRING_INPUT_SEQUENCE_HPP_INCLUDED

@@ -6,6 +6,7 @@
 
 template<typename T>
 class TerminalSymbol : public Symbol {
+    bool empty = false;
     T value;
 
 public:
@@ -19,6 +20,14 @@ public:
 
     void setValue(T value) {
         this->value = value;
+    }
+
+    bool isEmpty() {
+        return empty;
+    }
+
+    void setEmpty(bool empty) {
+        this->empty = empty;
     }
 };
 

@@ -24,7 +24,6 @@ TEST(GrammarCleaner, CleanGrammar) {
         E--->e
         F--->fD
     */
-
     auto S = std::make_shared<NonTerminalSymbol<std::string>>();
     S->setValue("S");
 
@@ -160,7 +159,7 @@ TEST(GrammarCleaner, CleanGrammar) {
     ASSERT_EQ(a->getValue(), std::static_pointer_cast<TerminalSymbol<char>>(cleanRule2->getLastValueSymbol())->getValue());
 
     auto cleanRule3 = grammarForCleaning->getProductionRule(2);
-    ASSERT_EQ(B->getValue(), std::static_pointer_cast<TerminalSymbol<std::string>>(cleanRule3->getFirstKeySymbol())->getValue());
+    ASSERT_EQ(B->getValue(), std::static_pointer_cast<NonTerminalSymbol<std::string>>(cleanRule3->getFirstKeySymbol())->getValue());
     ASSERT_EQ((unsigned) 2, cleanRule3->valueLength());
 
     int cleanRule3ValueSymbolIndex = 0;
