@@ -1,10 +1,13 @@
 apply plugin: 'cpp'
 apply plugin: 'google-test'
 
+import org.apache.tools.ant.taskdefs.condition.Os
+
 // This rather ugly bit of code disables googletest for the command_line executable.
 // I don't want to run tests against it with googletest.
 tasks.whenTaskAdded {task ->
-    if (task.name.contains("Command_lineTestGoogleTest")
+    if (Os.isFamily(Os.FAMILY_WINDOWS)
+        || task.name.contains("Command_lineTestGoogleTest")
         || task.name.contains("Parser_apiTestGoogleTest")
         || task.name.contains("Parser_api_default_implTest")
         || task.name.contains("Parser_impl_ungerTest")) {
@@ -28,6 +31,8 @@ model {
                 linker.executable = "g++-8.2.0"
                 staticLibArchiver.executable = "gcc-ar-8.2.0"
             }
+        }
+        visualCpp(VisualCpp) {
         }
     }
 
@@ -96,9 +101,9 @@ model {
 
     // For setup instructions see here https://guides.gradle.org/building-cpp-libraries/
     repositories {
-        libs(PrebuiltLibraries) { 
+        libs(PrebuiltLibraries) {
             googleTest { 
-                headers.srcDir new File(projectDir, "/gtest-1.8.0/include") 
+                headers.srcDir new File(projectDir, "/gtest-1.8.0/include")
                 binaries.withType(StaticLibraryBinary) {
                     staticLibraryFile = file(projectDir.getPath() + "/gtest-1.8.0/libgtest.a") 
                 }

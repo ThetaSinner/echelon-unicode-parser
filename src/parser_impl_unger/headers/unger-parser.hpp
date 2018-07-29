@@ -103,7 +103,7 @@ private:
             }
 
             std::cout << "Going to build partition generator." << std::endl;
-            internal::SequencePartitionGenerator partitionGenerator(input_sequence, value_length);
+            internal::SequencePartitionGenerator<T> partitionGenerator(input_sequence, value_length);
             std::cout << "Partition generator ready." << std::endl;
             while (partitionGenerator.currentValue() != nullptr) {
                 std::cout << "Built partition: [";
