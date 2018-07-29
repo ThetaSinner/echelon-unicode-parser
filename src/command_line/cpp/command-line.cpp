@@ -3,6 +3,7 @@
 #include <iostream>
 #include <vector>
 #include <memory>
+#include <limits>
 
 #include "grammar-parser.hpp"
 #include "terminal-symbol.hpp"
@@ -38,7 +39,12 @@ int main(int argc, char** argv) {
         std::cout << "Please provide an input file as argument 1" << std::endl;
         return 0;
     }
-    
+
+    if (std::string(argv[1]) == std::string("wait")) {
+        std::cout << "Waiting for input" << std::endl;
+        std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+    }
+
     // std::ifstream stream;
     // stream.open(argv[1]);
     

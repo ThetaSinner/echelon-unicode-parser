@@ -6,11 +6,11 @@ import org.apache.tools.ant.taskdefs.condition.Os
 // This rather ugly bit of code disables googletest for the command_line executable.
 // I don't want to run tests against it with googletest.
 tasks.whenTaskAdded {task ->
-    if (Os.isFamily(Os.FAMILY_WINDOWS)
-        || task.name.contains("Command_lineTestGoogleTest")
+    if (task.name.contains("Command_lineTestGoogleTest")
         || task.name.contains("Parser_apiTestGoogleTest")
         || task.name.contains("Parser_api_default_implTest")
-        || task.name.contains("Parser_impl_ungerTest")) {
+        || task.name.contains("Parser_impl_ungerTest")
+        || (Os.isFamily(Os.FAMILY_WINDOWS) && task.name.contains("GoogleTest"))) {
         task.enabled = false
     }
 }
@@ -42,6 +42,11 @@ model {
                 // The -g flag adds debug symbols for gdb
                 cppCompiler.args '-Wall', '-std=c++17', '-g'
                 linker.args '-L/usr/local/lib'
+            }
+            else if (toolChain in VisualCpp) {
+                // Zi and DEBUG build with debug symbols
+                cppCompiler.args "/Zi"
+                linker.args "/DEBUG"
             }
         }
 
