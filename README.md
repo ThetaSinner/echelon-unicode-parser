@@ -16,6 +16,12 @@ Now, inside the environment, the project can be build by running
 /opt/gradle/gradle-4.9/bin/gradle assemble
 ```
 
+If you're going to use GDB inside the container you'll need to add some extra flags when you create the container.
+These will give the container extra privileges to allow GDB to work
+```cmd
+docker run -it -v ${pwd}:/development --name myeupenv --cap-add=SYS_PTRACE --security-opt seccomp=unconfined eupenv:latest
+```
+
 #### Building the development environment
 >Please be aware that the image contains the Oracle JDK (java is needed for Gradle). In order to build the image without user intervention it automatically accepts the Oracle JDK license agreement. So by building the image you are effectively accepting the license agreement. If you wish to review it, you can find it [here](http://www.oracle.com/technetwork/java/javase/terms/license/index.html).
 

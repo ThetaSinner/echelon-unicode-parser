@@ -23,10 +23,10 @@ model {
         gcc(Gcc) {
             path "/usr/local/bin"
             eachPlatform {
-                cCompiler.executable = "gcc-7.3.0"
-                cppCompiler.executable = "g++-7.3.0"
-                linker.executable = "g++-7.3.0"
-                staticLibArchiver.executable = "gcc-ar-7.3.0"
+                cCompiler.executable = "gcc-8.2.0"
+                cppCompiler.executable = "g++-8.2.0"
+                linker.executable = "g++-8.2.0"
+                staticLibArchiver.executable = "gcc-ar-8.2.0"
             }
         }
     }
