@@ -41,10 +41,6 @@ private:
     std::shared_ptr<echelon::parsing::api::ParseTree> _parse(echelon::parsing::api::InputSequence<T>* input_sequence, std::shared_ptr<Symbol> current_symbol, unsigned depth = 0) {
         using namespace echelon::parsing::api;
 
-        if (depth > 0) {
-            return nullptr;
-        }
-
         std::cout << "Top of loop with sequence [";
         if (input_sequence == nullptr) {
             std::cout << "nullptr";
