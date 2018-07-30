@@ -14,6 +14,21 @@
 namespace echelon { namespace parsing { namespace impl { namespace unger {
 
 template<typename T>
+class ParseQuestion {
+    echelon::parsing::api::InputSequence<T>* input_sequence;
+    std::shared_ptr<Symbol> symbol;
+public:
+    ParseQuestion(echelon::parsing::api::InputSequence<T>* input_sequence, std::shared_ptr<Symbol> symbol) {
+        this->input_sequence = input_sequence;
+        this->symbol = symbol;
+    }
+
+    bool matches(echelon::parsing::api::InputSequence<T>* input_sequence, std::shared_ptr<Symbol> symbol) {
+        return *(this->input_sequence) == *input_sequence && *(this->symbol) == *symbol;
+    }
+};
+
+template<typename T>
 class UngerParser {
     echelon::grammar_model::Grammar* grammar;
 public:
@@ -33,12 +48,14 @@ public:
             return nullptr;
         }
 
+        std::vector<ParseQuestion<T>> question_list;
+
         std::shared_ptr<Symbol> start_symbol(grammar->getStartSymbol());
-        return _parse(input_sequence, start_symbol);
+        return _parse(input_sequence, start_symbol, question_list);
     }
 
 private:
-    std::shared_ptr<echelon::parsing::api::ParseTree> _parse(echelon::parsing::api::InputSequence<T>* input_sequence, std::shared_ptr<Symbol> current_symbol, unsigned depth = 0) {
+    std::shared_ptr<echelon::parsing::api::ParseTree> _parse(echelon::parsing::api::InputSequence<T>* input_sequence, std::shared_ptr<Symbol> current_symbol, std::vector<ParseQuestion<T>>& question_list) {
         using namespace echelon::parsing::api;
 
         std::cout << "Top of loop with sequence [";
@@ -63,7 +80,7 @@ private:
 
         std::shared_ptr<ParseTree> local_root = nullptr;
 
-        grammar->eachRule([this, &input_sequence, &current_symbol, &local_root, &depth](auto production_rule) {
+        grammar->eachRule([this, &input_sequence, &current_symbol, &local_root, &question_list](auto production_rule) {
             if (local_root != nullptr) {
                 // TODO Because of the eachRule the iteration cannot be stopped when a match has been found
                 std::cout << "Aleady finished matching. Skip loop." << std::endl;
@@ -159,8 +176,24 @@ private:
                     else if (symbol->getType() == SymbolType::NonTerminal) {
                         std::cout << "Processing non-terminal." << std::endl;
 
+                        bool prune = false;
+                        for (int i = 0; i < question_list.size(); i++) {
+                            if ((question_list[i]).matches(sub_input_sequence, symbol)) {
+                                prune = true;
+                                break;
+                            }
+                        }
+
+                        if (prune) {
+                            partition_success = false;
+                            break;
+                        }
+
+                        ParseQuestion<T> next_question(sub_input_sequence, symbol);
+                        question_list.push_back(next_question);
                         // Recursively try to parse the substring based on this non-terminal
-                        auto sub_tree = _parse(sub_input_sequence, symbol, depth + 1);
+                        auto sub_tree = _parse(sub_input_sequence, symbol, question_list);
+                        question_list.pop_back();
                         if (sub_tree == nullptr) {
                             partition_success = false;
                             break;

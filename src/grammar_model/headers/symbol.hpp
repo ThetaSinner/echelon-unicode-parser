@@ -24,6 +24,10 @@ public:
     }
 
     virtual SymbolType getType() = 0;
+
+    bool operator==(const Symbol& symbol) {
+        return id == symbol.id;
+    }
 };
 
 #endif // SYMBOL_HPP_INCLUDED

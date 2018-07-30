@@ -38,6 +38,9 @@
 # Gradle
 build
 
+# VS
+.vs
+
 build-log.txt
 
 grammar/*.interp

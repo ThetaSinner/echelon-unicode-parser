@@ -12,6 +12,7 @@ public:
     virtual void each(std::function<void(T&)> action) = 0;
     virtual InputSequence<T>* getSubSequence(unsigned start, unsigned length) = 0;
     virtual bool matches(T element) = 0;
+    virtual bool operator==(const InputSequence<T>& input_sequence) = 0;
 };
 
 }}}

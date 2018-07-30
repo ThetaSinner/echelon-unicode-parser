@@ -29,8 +29,12 @@ public:
         return new StringInputSequence(_input_sequence.substr(start, length));
     }
 
-    bool matches(char element) {
+    bool matches(char element) override {
         return _input_sequence.length() == 1 && _input_sequence[0] == element;
+    }
+
+    bool operator==(const InputSequence<char>& input_sequence) override {
+        return _input_sequence == ((const StringInputSequence&) input_sequence)._input_sequence;
     }
 };
 
