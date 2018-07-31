@@ -34,6 +34,22 @@ void printIndices(std::vector<unsigned> indices) {
     std::cout << "\n";
 }
 
+void printTree(std::shared_ptr<echelon::parsing::api::ParseTree> current_node, int depth) {
+	auto symbol = current_node->getCurrentSymbol();
+	std::cout << "The current symbol is [";
+    if (symbol->getType() == SymbolType::Terminal) {
+        std::cout << std::static_pointer_cast<TerminalSymbol<char>>(symbol)->getValue();
+    }
+    else {
+        std::cout << std::static_pointer_cast<NonTerminalSymbol<std::string>>(symbol)->getValue();
+    }
+    std::cout << "], depth is [" << depth << "]" << std::endl;
+
+	for (const auto& c : current_node->getChildren()) {
+		printTree(c, depth + 1);
+	}
+}
+
 int main(int argc, char** argv) {
     if (argc < 2) {
         std::cout << "Please provide an input file as argument 1" << std::endl;
@@ -181,6 +197,8 @@ int main(int argc, char** argv) {
     else {
         std::cout << "No shock there then.\n";
     }
+
+	printTree(tree, 0);
 
     std::cout << "bye" << std::endl;
     return 0;

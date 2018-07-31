@@ -24,6 +24,14 @@ public:
         children.push_back(subTree);
     }
 
+	std::shared_ptr<Symbol> getCurrentSymbol() {
+		return symbol;
+	}
+
+	std::vector<std::shared_ptr<ParseTree>> getChildren() {
+		return children;
+	}
+
 private:
     std::shared_ptr<Symbol> symbol;
     std::vector<std::shared_ptr<ParseTree>> children;
