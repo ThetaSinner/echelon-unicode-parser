@@ -54,11 +54,22 @@ public:
         std::vector<ParseQuestion<T>> question_list;
 
         std::shared_ptr<Symbol> start_symbol(grammar->getStartSymbol());
-        return _parse(input_sequence, start_symbol, question_list);
+		auto result = _parse(input_sequence, start_symbol, question_list);
+
+		if (result.size() == 0) {
+			return nullptr;
+		}
+		else {
+			auto root = ParseTree::createWithSymbol(start_symbol);
+			for (const auto& node : result) {
+				root->addSubTree(node);
+			}
+			return root;
+		}
     }
 
 private:
-    std::shared_ptr<echelon::parsing::api::ParseTree> _parse(echelon::parsing::api::InputSequence<T>* input_sequence, std::shared_ptr<Symbol> current_symbol, std::vector<ParseQuestion<T>>& question_list) {
+    std::list<std::shared_ptr<echelon::parsing::api::ParseTree>> _parse(echelon::parsing::api::InputSequence<T>* input_sequence, std::shared_ptr<Symbol> current_symbol, std::vector<ParseQuestion<T>>& question_list) {
         using namespace echelon::parsing::api;
 		
 		/*
@@ -85,10 +96,10 @@ private:
         std::cout << "]" << std::endl;
 		*/
 
-        std::shared_ptr<ParseTree> local_root = nullptr;
+        std::list<std::shared_ptr<echelon::parsing::api::ParseTree>> result;
 
-        grammar->eachRule([this, &input_sequence, &current_symbol, &local_root, &question_list](auto production_rule) {
-            if (local_root != nullptr) {
+        grammar->eachRule([this, &input_sequence, &current_symbol, &result, &question_list](auto production_rule) {
+            if (result.size() != 0) {
                 // TODO Because of the eachRule the iteration cannot be stopped when a match has been found
                 // std::cout << "Aleady finished matching. Skip loop." << std::endl;
                 return;
@@ -109,13 +120,11 @@ private:
                 if (symbol->getType() == SymbolType::Terminal) {
                     if (input_sequence == nullptr) {
                         if (std::static_pointer_cast<TerminalSymbol<T>>(symbol)->isEmpty()) {
-                            local_root = ParseTree::createWithSymbol(current_symbol);
-                            local_root->addChild(symbol);
+                            result.push_back(ParseTree::createWithSymbol(symbol));
                         }
                     }
                     else if (input_sequence->matches(std::static_pointer_cast<TerminalSymbol<T>>(symbol)->getValue())) {
-                        local_root = ParseTree::createWithSymbol(current_symbol);
-                        local_root->addChild(symbol);
+                        result.push_back(ParseTree::createWithSymbol(symbol));
                     }
                 }
 				else if (symbol->getType() == SymbolType::NonTerminal) {
@@ -134,14 +143,18 @@ private:
                     ParseQuestion<T> next_question(input_sequence, symbol);
                     question_list.push_back(next_question);
                     // Recursively try to parse the substring based on this non-terminal
-                    auto sub_tree = _parse(input_sequence, symbol, question_list);
+                    auto sub_tree_list = _parse(input_sequence, symbol, question_list);
                     question_list.pop_back();
-                    if (sub_tree == nullptr) {
+                    if (sub_tree_list.size() == 0) {
                         return;
                     }
                     else {
-                        local_root = ParseTree::createWithSymbol(current_symbol);
-                        local_root->addChild(symbol);
+                        auto local_result = ParseTree::createWithSymbol(symbol);
+						for (const auto& node : sub_tree_list) {
+							local_result->addSubTree(node);
+						}
+
+						result.push_back(local_result);
                     }
 				}
 				else {
@@ -232,14 +245,19 @@ private:
                         ParseQuestion<T> next_question(sub_input_sequence, symbol);
                         question_list.push_back(next_question);
                         // Recursively try to parse the substring based on this non-terminal
-                        auto sub_tree = _parse(sub_input_sequence, symbol, question_list);
+                        auto sub_tree_list = _parse(sub_input_sequence, symbol, question_list);
                         question_list.pop_back();
-                        if (sub_tree == nullptr) {
+                        if (sub_tree_list.size() == 0) {
                             partition_success = false;
                             break;
                         }
                         else {
-                            potential_nodes.push_back(ParseTree::createWithSymbol(symbol));
+							auto root = ParseTree::createWithSymbol(symbol);
+							for (const auto& node : sub_tree_list) {
+								root->addSubTree(node);
+							}
+
+                            potential_nodes.push_back(root);
                         }
                     }
                     else {
@@ -250,9 +268,8 @@ private:
                 }
 
                 if (partition_success) {
-                    local_root = ParseTree::createWithSymbol(current_symbol);
-                    std::for_each(potential_nodes.begin(), potential_nodes.end(), [&local_root](const std::shared_ptr<ParseTree>& node) {
-                        local_root->addSubTree(node);
+                    std::for_each(potential_nodes.begin(), potential_nodes.end(), [&result](const std::shared_ptr<ParseTree>& node) {
+                        result.push_back(node);
                     });
 
                     break;
@@ -262,7 +279,7 @@ private:
             }
         });
 
-        return local_root;
+        return result;
     }
 };
 
