@@ -180,16 +180,44 @@ private:
                 std::cout << "]" << std::endl;
 				*/
 
+				std::vector<InputSequence<T>*> sub_sequences;
+
+				bool skipPartition = false;
+				unsigned start_index = 0;
                 // TODO rename partition indices, misleading name.
                 auto partition = partitionGenerator.currentValue()->getPartitionIndices();
+				for (int i = 0; i < partition.size(); i++) {
+					auto sub_input_sequence = input_sequence == nullptr ? nullptr : input_sequence->getSubSequence(start_index, partition[i]);
+
+					auto symbol = production_rule->getValues()[i];
+					if (sub_input_sequence == nullptr) {
+						// If the sequence is empty and it needs to match a non-empty terminal then it cannot succeed, skip.
+						skipPartition = symbol->getType() == SymbolType::Terminal && !std::static_pointer_cast<TerminalSymbol<T>>(symbol)->isEmpty();
+					}
+					else {
+						// If the sequence is non-empty it must have length >= 1, so can only be matched by a single terminal non-empty terminal if the sequence has length 1.
+						skipPartition = symbol->getType() == SymbolType::Terminal && (sub_input_sequence->length() != 1 || std::static_pointer_cast<TerminalSymbol<T>>(symbol)->isEmpty());
+					}
+
+					if (skipPartition) {
+						break;
+					}
+
+					sub_sequences.push_back(sub_input_sequence);
+					start_index += partition[i];
+				}
+
+				if (skipPartition) {
+					partitionGenerator.moveNext();
+					continue;
+				}
 
                 std::list<std::shared_ptr<ParseTree>> potential_nodes;
 
                 bool partition_success = true;
-                unsigned start_index = 0;
-                for (int i = 0; i < partition.size(); i++) {
+                for (int i = 0; i < sub_sequences.size(); i++) {
                     // std::cout << "Ready to create subsequence starting at [" << start_index << "] with length [" << partition[i] << "]" << std::endl;
-                    auto sub_input_sequence = input_sequence == nullptr ? nullptr : input_sequence->getSubSequence(start_index, partition[i]);
+                    auto sub_input_sequence = sub_sequences[i];
 
 					/*
                     std::cout << "Working with sub-sequence [";
@@ -263,8 +291,6 @@ private:
                     else {
                         throw new std::domain_error("Invalid symbol");
                     }
-
-                    start_index += partition[i];
                 }
 
                 if (partition_success) {
