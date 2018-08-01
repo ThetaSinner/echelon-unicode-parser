@@ -22,6 +22,11 @@ model {
         }
     }
 
+    buildTypes {
+        debug
+        release
+    }
+
     toolChains {
         gcc(Gcc) {
             path "/usr/local/bin"
@@ -39,11 +44,17 @@ model {
     binaries {
         all {
             if (toolChain in Gcc) {
-                // The -g flag adds debug symbols for gdb
-                cppCompiler.args '-Wall', '-std=c++17', '-g'
+                if (buildType == buildTypes.debug) {
+                    // The -g flag adds debug symbols for gdb or otherwise
+                    cppCompiler.args '-Wall', '-std=c++17', '-g'
+                }
+                else {
+                    cppCompiler.args '-Wall', '-std=c++17', '-O2'
+                }
+                
                 linker.args '-L/usr/local/lib'
             }
-            else if (toolChain in VisualCpp) {
+            else if (toolChain in VisualCpp && buildType == buildTypes.debug) {
                 // Zi and DEBUG build with debug symbols
                 cppCompiler.args "/Zi"
                 linker.args "/DEBUG"
