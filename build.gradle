@@ -6,10 +6,11 @@ import org.apache.tools.ant.taskdefs.condition.Os
 // This rather ugly bit of code disables googletest for the command_line executable.
 // I don't want to run tests against it with googletest.
 tasks.whenTaskAdded {task ->
-    if (task.name.contains("Command_lineTestGoogleTest")
-        || task.name.contains("Parser_apiTestGoogleTest")
+    if (task.name.contains("Command_lineTest")
+        || task.name.contains("Parser_apiTest")
         || task.name.contains("Parser_api_default_implTest")
         || task.name.contains("Parser_impl_ungerTest")
+        || task.name.contains("Eup_benchmarkTest")
         || (Os.isFamily(Os.FAMILY_WINDOWS) && task.name.contains("GoogleTest"))) {
         task.enabled = false
     }
@@ -113,6 +114,17 @@ model {
                 cpp.lib library: "parser_impl_unger", linkage: "static"
             }
         }
+        eup_benchmark(NativeExecutableSpec) {
+            targetPlatform "x64"
+
+            binaries.all {
+                cppCompiler.args '-pthread'
+                linker.args '-pthread'
+            }
+            sources {
+                cpp.lib library: "googleBenchmark", linkage: "static"
+            }
+        }
     }
 
     // For setup instructions see here https://guides.gradle.org/building-cpp-libraries/
@@ -122,6 +134,12 @@ model {
                 headers.srcDir new File(projectDir, "/gtest-1.8.0/include")
                 binaries.withType(StaticLibraryBinary) {
                     staticLibraryFile = file(projectDir.getPath() + "/gtest-1.8.0/libgtest.a") 
+                }
+            }
+            googleBenchmark {
+                headers.srcDir new File("/usr/local/include/benchmark")
+                binaries.withType(StaticLibraryBinary) {
+                    staticLibraryFile = new File("/usr/local/lib/libbenchmark.a")
                 }
             }
         }
