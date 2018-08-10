@@ -10,6 +10,7 @@
 #include "parse-tree.hpp"
 #include "sequence-partition-generator.hpp"
 #include "symbol-type.hpp"
+#include "terminal-symbol.hpp"
 
 namespace echelon { namespace parsing { namespace impl { namespace unger {
 
@@ -42,8 +43,6 @@ public:
     std::shared_ptr<echelon::parsing::api::ParseTree> parse(echelon::parsing::api::InputSequence<T>* input_sequence) {
         using namespace echelon::parsing::api;
         using namespace echelon::grammar_utilities;
-
-        std::cout << "Starting parse." << std::endl;
 
         if (!ChomskyTest::isContextFree(grammar)) {
             // This parsing technique requires a context free grammar or stricter.
@@ -129,7 +128,7 @@ private:
                 }
 				else if (symbol->getType() == SymbolType::NonTerminal) {
 					bool prune = false;
-                    for (int i = 0; i < question_list.size(); i++) {
+                    for (std::size_t i = 0; i < question_list.size(); i++) {
                         if ((question_list[i]).matches(input_sequence, symbol)) {
                             prune = true;
                             break;
@@ -186,7 +185,7 @@ private:
 				unsigned start_index = 0;
                 // TODO rename partition indices, misleading name.
                 auto partition = partitionGenerator.currentValue()->getPartitionIndices();
-				for (int i = 0; i < partition.size(); i++) {
+				for (std::size_t i = 0; i < partition.size(); i++) {
 					auto sub_input_sequence = input_sequence == nullptr ? nullptr : input_sequence->getSubSequence(start_index, partition[i]);
 
 					auto symbol = production_rule->getValues()[i];
@@ -215,7 +214,7 @@ private:
                 std::list<std::shared_ptr<ParseTree>> potential_nodes;
 
                 bool partition_success = true;
-                for (int i = 0; i < sub_sequences.size(); i++) {
+                for (std::size_t i = 0; i < sub_sequences.size(); i++) {
                     // std::cout << "Ready to create subsequence starting at [" << start_index << "] with length [" << partition[i] << "]" << std::endl;
                     auto sub_input_sequence = sub_sequences[i];
 
@@ -258,7 +257,7 @@ private:
                         // std::cout << "Processing non-terminal." << std::endl;
 
                         bool prune = false;
-                        for (int i = 0; i < question_list.size(); i++) {
+                        for (unsigned i = 0; i < question_list.size(); i++) {
                             if ((question_list[i]).matches(sub_input_sequence, symbol)) {
                                 prune = true;
                                 break;
