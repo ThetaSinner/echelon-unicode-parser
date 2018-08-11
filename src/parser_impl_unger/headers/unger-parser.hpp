@@ -70,50 +70,22 @@ public:
 private:
     std::list<std::shared_ptr<echelon::parsing::api::ParseTree>> _parse(echelon::parsing::api::InputSequence<T>* input_sequence, std::shared_ptr<Symbol> current_symbol, std::vector<ParseQuestion<T>>& question_list) {
         using namespace echelon::parsing::api;
-		
-		/*
-        std::cout << "Top of loop with sequence [";
-        if (input_sequence == nullptr) {
-            std::cout << "nullptr";
-        }
-        else {
-            input_sequence->each([](auto element) {
-                std::cout << element;
-            });
-        }
-        std::cout << "]" << std::endl;
-		*/
-
-		/*
-        std::cout << "The current symbol is [";
-        if (current_symbol->getType() == SymbolType::Terminal) {
-            std::cout << std::static_pointer_cast<TerminalSymbol<char>>(current_symbol)->getValue();
-        }
-        else {
-            std::cout << std::static_pointer_cast<NonTerminalSymbol<std::string>>(current_symbol)->getValue();
-        }
-        std::cout << "]" << std::endl;
-		*/
 
         std::list<std::shared_ptr<echelon::parsing::api::ParseTree>> result;
 
         grammar->eachRule([this, &input_sequence, &current_symbol, &result, &question_list](auto production_rule) {
             if (result.size() != 0) {
                 // TODO Because of the eachRule the iteration cannot be stopped when a match has been found
-                // std::cout << "Aleady finished matching. Skip loop." << std::endl;
                 return;
             }
 
             if (!production_rule->getFirstKeySymbol()->equals(current_symbol)) {
-                // std::cout << "Filtering production rule which doesn't match" << std::endl;
                 return;
             }
 
             auto value_length = production_rule->valueLength();
-            // std::cout << "Production rule has [" << value_length << "] symbols" << std::endl;
             
             if (value_length == 1) {
-                // std::cout << "Special case for value length 1" << std::endl;
 
                 auto symbol = production_rule->getValues()[0];
                 if (symbol->getType() == SymbolType::Terminal) {
@@ -163,22 +135,8 @@ private:
                 return;
             }
 
-            // std::cout << "Going to build partition generator." << std::endl;
             internal::SequencePartitionGenerator<T> partitionGenerator(input_sequence, value_length);
-            // std::cout << "Partition generator ready." << std::endl;
             while (partitionGenerator.currentValue() != nullptr) {
-                /*
-				std::cout << "Built partition: [";
-                auto indices = partitionGenerator.currentValue()->getPartitionIndices();
-                for (int i = 0; i < indices.size(); i++) {
-                    std::cout << indices[i];
-                    if (i + 1 != indices.size()) {
-                        std::cout << " | ";
-                    }
-                }
-                std::cout << "]" << std::endl;
-				*/
-
 				std::vector<InputSequence<T>*> sub_sequences;
 
 				bool skipPartition = false;
@@ -215,25 +173,10 @@ private:
 
                 bool partition_success = true;
                 for (std::size_t i = 0; i < sub_sequences.size(); i++) {
-                    // std::cout << "Ready to create subsequence starting at [" << start_index << "] with length [" << partition[i] << "]" << std::endl;
                     auto sub_input_sequence = sub_sequences[i];
-
-					/*
-                    std::cout << "Working with sub-sequence [";
-                    if (sub_input_sequence == nullptr) {
-                        std::cout << "nullptr";
-                    }
-                    else {
-                        sub_input_sequence->each([](auto element) {
-                            std::cout << element;
-                        });
-                    }
-                    std::cout << "]" << std::endl;
-                    */
 
                     auto symbol = production_rule->getValues()[i];
                     if (symbol->getType() == SymbolType::Terminal) {
-                        // std::cout << "Processing terminal" << std::endl;
 
                         // Either a leaf node or the match has failed.
                         if (sub_input_sequence == nullptr) {
@@ -254,8 +197,6 @@ private:
                         }
                     }
                     else if (symbol->getType() == SymbolType::NonTerminal) {
-                        // std::cout << "Processing non-terminal." << std::endl;
-
                         bool prune = false;
                         for (unsigned i = 0; i < question_list.size(); i++) {
                             if ((question_list[i]).matches(sub_input_sequence, symbol)) {
