@@ -38,6 +38,19 @@ The image should now be ready to use.
 If you want the annoying squigly green lines under your system headers includes to go away. Or just want intelliSense to work! Then the simplest way to do that is to install the VC++ build tools, reboot and just do what VSCode asks.
 This does mean you're coding against the Visual C++ headers and building against the GCC headers but let's hope that the ISO standard behind C++ works out. You're also welcome to ignore the docker environment and just build against VC++, but any issues you run into you'll have to figure out for yourself.
 
+#### Benchmarking
+
+When you build the project a benchmark executable is built. It uses Google's C++ [benchmark](https://github.com/google/benchmark) tool to do the timing.
+
+Inside the bench directory you'll find 3 shell scripts.
+| Name             | Description                                                                                  |
+|------------------|----------------------------------------------------------------------------------------------|
+| run-bench.sh     | Runs the benchmark executable and captures results into a results file ending in `_dev.json` |
+| compare-bench.sh | Compares the `_dev.json` to the accepted results and prints the results for comparison       |
+| save-bench.sh    | To update the accepted results this copies the `_dev.json` results to the accepted results   |
+
+The dev results are ignored, and the accepted results are version controlled.
+
 #### Things to fix
 - The PATH variable in the eupenv is only set in the build session. Which means you have to reference ```/opt/gradle/gradle-4.6/bin/gradle``` when using the image.
 - VSCode runs outside the eupenv, so it can't use the header files from in there for intelliSense. Possibly I can map the directory containing the headers from the image.

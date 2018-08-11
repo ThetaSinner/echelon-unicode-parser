@@ -44,3 +44,6 @@ build
 build-log.txt
 
 !gtest-1.8.0/libgtest.a
+
+# benchmarking
+bench/eup_benchmark_results_dev.json
