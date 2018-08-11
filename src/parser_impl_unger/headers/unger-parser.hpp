@@ -4,6 +4,7 @@
 #include <stdexcept>
 #include <list>
 #include <algorithm>
+#include <map>
 
 #include "input-sequence.hpp"
 #include "chomsky-test.hpp"
@@ -30,7 +31,28 @@ public:
 		}
         return *(this->input_sequence) == *input_sequence && *(this->symbol) == *symbol;
     }
+
+    virtual bool operator<(const ParseQuestion<T>& parse_question) const {
+        if ((*input_sequence) < (* parse_question.input_sequence)) {
+            return true;
+        }
+        else if (!((* parse_question.input_sequence) < (*input_sequence))) {
+            return symbol->getId() < parse_question.symbol->getId();
+        }
+        else {
+            return false;
+        }
+    }
 };
+
+template<typename T>
+struct InputSequenceComparator {
+  bool operator() (const ParseQuestion<T>* lhs, const ParseQuestion<T>* rhs) const
+  { return (*lhs) < (*rhs); }
+};
+
+template<typename T>
+using QuestionCache = std::map<ParseQuestion<T>*, std::list<std::shared_ptr<echelon::parsing::api::ParseTree>>, InputSequenceComparator<T>>;
 
 template<typename T>
 class UngerParser {
@@ -51,9 +73,10 @@ public:
         }
 
         std::vector<ParseQuestion<T>> question_list;
+        QuestionCache<T> question_cache;
 
         std::shared_ptr<Symbol> start_symbol(grammar->getStartSymbol());
-		auto result = _parse(input_sequence, start_symbol, question_list);
+		auto result = _parse(input_sequence, start_symbol, question_list, question_cache);
 
 		if (result.size() == 0) {
 			return nullptr;
@@ -68,12 +91,14 @@ public:
     }
 
 private:
-    std::list<std::shared_ptr<echelon::parsing::api::ParseTree>> _parse(echelon::parsing::api::InputSequence<T>* input_sequence, std::shared_ptr<Symbol> current_symbol, std::vector<ParseQuestion<T>>& question_list) {
+    // The question_list is used to track the questions that are currently being asked to prevent infinite recursion.
+    // The question_cache is used to remember questions which already have answered. This is done for performance.
+    std::list<std::shared_ptr<echelon::parsing::api::ParseTree>> _parse(echelon::parsing::api::InputSequence<T>* input_sequence, std::shared_ptr<Symbol> current_symbol, std::vector<ParseQuestion<T>>& question_list, QuestionCache<T>& question_cache) {
         using namespace echelon::parsing::api;
 
         std::list<std::shared_ptr<echelon::parsing::api::ParseTree>> result;
 
-        grammar->eachRule([this, &input_sequence, &current_symbol, &result, &question_list](auto production_rule) {
+        grammar->eachRule([this, &input_sequence, &current_symbol, &result, &question_list, &question_cache](auto production_rule) {
             if (result.size() != 0) {
                 // TODO Because of the eachRule the iteration cannot be stopped when a match has been found
                 return;
@@ -114,7 +139,7 @@ private:
                     ParseQuestion<T> next_question(input_sequence, symbol);
                     question_list.push_back(next_question);
                     // Recursively try to parse the substring based on this non-terminal
-                    auto sub_tree_list = _parse(input_sequence, symbol, question_list);
+                    auto sub_tree_list = _parse(input_sequence, symbol, question_list, question_cache);
                     question_list.pop_back();
                     if (sub_tree_list.size() == 0) {
                         return;
@@ -212,8 +237,18 @@ private:
 
                         ParseQuestion<T> next_question(sub_input_sequence, symbol);
                         question_list.push_back(next_question);
-                        // Recursively try to parse the substring based on this non-terminal
-                        auto sub_tree_list = _parse(sub_input_sequence, symbol, question_list);
+
+                        std::list<std::shared_ptr<echelon::parsing::api::ParseTree>> sub_tree_list;
+                        auto cache_question = new ParseQuestion<T>(sub_input_sequence, symbol);
+                        if (question_cache.find(cache_question) != question_cache.end()) {
+                            sub_tree_list = question_cache[cache_question];
+                        }
+                        else {
+                            // Recursively try to parse the substring based on this non-terminal
+                            sub_tree_list = _parse(sub_input_sequence, symbol, question_list, question_cache);
+                            question_cache[cache_question] = sub_tree_list;
+                        }
+                        
                         question_list.pop_back();
                         if (sub_tree_list.size() == 0) {
                             partition_success = false;
