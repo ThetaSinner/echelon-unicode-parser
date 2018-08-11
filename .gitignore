@@ -43,12 +43,4 @@ build
 
 build-log.txt
 
-grammar/*.interp
-grammar/*.tokens
-grammar/echelon*.h
-grammar/echelon*.cpp
-
-src/grammar_parser/headers/echelon*.h
-src/grammar_parser/cpp/echelon*.cpp
-
 !gtest-1.8.0/libgtest.a
