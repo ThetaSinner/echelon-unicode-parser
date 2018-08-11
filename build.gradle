@@ -3,6 +3,9 @@ apply plugin: 'google-test'
 
 import org.apache.tools.ant.taskdefs.condition.Os
 
+// Feature flag to control whether benchmarking is linked in and built.
+def withBenchmark = !Os.isFamily(Os.FAMILY_WINDOWS)
+
 // This rather ugly bit of code disables googletest for the command_line executable.
 // I don't want to run tests against it with googletest.
 tasks.whenTaskAdded {task ->
@@ -11,10 +14,12 @@ tasks.whenTaskAdded {task ->
         || task.name.contains("Parser_api_default_implTest")
         || task.name.contains("Parser_impl_ungerTest")
         || task.name.contains("Eup_benchmarkTest")
-        || (Os.isFamily(Os.FAMILY_WINDOWS) && task.name.contains("GoogleTest"))) {
+        || task.name.contains("compileEup_benchmark")
+        || (Os.isFamily(Os.FAMILY_WINDOWS) && (task.name.contains("GoogleTest")))) {
         task.enabled = false
     }
 }
+
 
 model {
     platforms {
@@ -114,23 +119,25 @@ model {
                 cpp.lib library: "parser_impl_unger", linkage: "static"
             }
         }
-        eup_benchmark(NativeExecutableSpec) {
-            targetPlatform "x64"
+        if (withBenchmark) {
+            eup_benchmark(NativeExecutableSpec) {
+                targetPlatform "x64"
 
-            binaries.all {
-                cppCompiler.args '-pthread'
-                linker.args '-pthread'
-            }
-            sources {
-                cpp.lib library: "googleBenchmark", linkage: "static"
+                binaries.all {
+                    cppCompiler.args '-pthread'
+                    linker.args '-pthread'
+                }
+                sources {
+                    cpp.lib library: "googleBenchmark", linkage: "static"
 
-                cpp.lib library: "grammar_parser", linkage: "static"
-                cpp.lib library: "grammar_model", linkage: "static"
-                cpp.lib library: "reason", linkage: "static"
-                cpp.lib library: "grammar_utilities", linkage: "static"
-                cpp.lib library: "parser_api", linkage: "static"
-                cpp.lib library: "parser_api_default_impl", linkage: "static"
-                cpp.lib library: "parser_impl_unger", linkage: "static"
+                    cpp.lib library: "grammar_parser", linkage: "static"
+                    cpp.lib library: "grammar_model", linkage: "static"
+                    cpp.lib library: "reason", linkage: "static"
+                    cpp.lib library: "grammar_utilities", linkage: "static"
+                    cpp.lib library: "parser_api", linkage: "static"
+                    cpp.lib library: "parser_api_default_impl", linkage: "static"
+                    cpp.lib library: "parser_impl_unger", linkage: "static"
+                }
             }
         }
     }
@@ -144,10 +151,12 @@ model {
                     staticLibraryFile = file(projectDir.getPath() + "/gtest-1.8.0/libgtest.a") 
                 }
             }
-            googleBenchmark {
-                headers.srcDir new File("/usr/local/include/benchmark")
-                binaries.withType(StaticLibraryBinary) {
-                    staticLibraryFile = new File("/usr/local/lib/libbenchmark.a")
+            if (withBenchmark) {
+                googleBenchmark {
+                        headers.srcDir new File("/usr/local/include/benchmark")
+                        binaries.withType(StaticLibraryBinary) {
+                            staticLibraryFile = new File("/usr/local/lib/libbenchmark.a")
+                        }
                 }
             }
         }

@@ -38,6 +38,16 @@ The image should now be ready to use.
 If you want the annoying squigly green lines under your system headers includes to go away. Or just want intelliSense to work! Then the simplest way to do that is to install the VC++ build tools, reboot and just do what VSCode asks.
 This does mean you're coding against the Visual C++ headers and building against the GCC headers but let's hope that the ISO standard behind C++ works out. You're also welcome to ignore the docker environment and just build against VC++, but any issues you run into you'll have to figure out for yourself.
 
+#### Developing in Visual Studio
+
+This is currently the only way the project can be debugged graphically. If you've got a simple problem then GDB is available in the linux docker container.
+
+Installing the Community edition of Visual Studio will result in Gradle being unable to locate VS tools. You need to include the C++ desktop development package from the VS installer. Gradle will actually use a tool in the installer to locate the tools it needs.
+
+If you have problems building on VC++ then enable debug mode for Gradle using `gradle build --debug`. Looking through the logs should help to identify what Gradle is actually doing and lead you to a solution, or at least help from the internet.
+
+None of the tests or benchmarks can be used on Windows at the moment. The Google tools they depend on need to be built with CMake and I've had no need to put myself through that yet, hence - no example or instructions for doing this are provided. This means that the test and benchmark binaries are not built when Gradle is running on Windows.
+
 #### Benchmarking
 
 When you build the project a benchmark executable is built. It uses Google's C++ [benchmark](https://github.com/google/benchmark) tool to do the timing.
