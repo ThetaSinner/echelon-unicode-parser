@@ -1,0 +1,59 @@
+{
+  "context": {
+    "date": "2018-08-11 13:00:13",
+    "executable": "/development/bench/../build/exe/eup_benchmark/release/eup_benchmark",
+    "num_cpus": 2,
+    "mhz_per_cpu": 2718,
+    "cpu_scaling_enabled": false,
+    "caches": [
+      {
+        "type": "Data",
+        "level": 1,
+        "size": 32000000,
+        "num_sharing": 1
+      },
+      {
+        "type": "Instruction",
+        "level": 1,
+        "size": 32000000,
+        "num_sharing": 1
+      },
+      {
+        "type": "Unified",
+        "level": 2,
+        "size": 256000000,
+        "num_sharing": 1
+      },
+      {
+        "type": "Unified",
+        "level": 3,
+        "size": 6144000000,
+        "num_sharing": 2
+      }
+    ],
+    "library_build_type": "release"
+  },
+  "benchmarks": [
+    {
+      "name": "BM_ParseSingleSymbolExpression",
+      "iterations": 84156,
+      "real_time": 7.9953609962401761e+03,
+      "cpu_time": 7.9896571248633491e+03,
+      "time_unit": "ns"
+    },
+    {
+      "name": "BM_ParseShortExpression",
+      "iterations": 275,
+      "real_time": 2.5755534545466867e+06,
+      "cpu_time": 2.5722029199999999e+06,
+      "time_unit": "ns"
+    },
+    {
+      "name": "BM_StringCopy",
+      "iterations": 121374538,
+      "real_time": 5.6384297009662827e+00,
+      "cpu_time": 5.6287632336857989e+00,
+      "time_unit": "ns"
+    }
+  ]
+}
