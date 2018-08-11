@@ -106,7 +106,6 @@ static void BM_ParseSingleSymbolExpression(benchmark::State& state) {
   for (auto _ : state)
     ungerParserWithSimpleArithmeticGrammar->parse(single_symbol_expression);
 }
-// Register the function as a benchmark
 BENCHMARK(BM_ParseSingleSymbolExpression);
 
 /**
