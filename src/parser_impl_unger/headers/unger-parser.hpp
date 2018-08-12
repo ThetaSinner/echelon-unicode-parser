@@ -33,6 +33,17 @@ public:
     }
 
     virtual bool operator<(const ParseQuestion<T>& parse_question) const {
+        if (input_sequence == nullptr || parse_question.input_sequence == nullptr) {
+			if (input_sequence == nullptr && parse_question.input_sequence != nullptr) {
+				return true;
+			}
+			else if (input_sequence != nullptr && parse_question.input_sequence == nullptr) {
+				return false;
+			}
+
+            return symbol->getId() < parse_question.symbol->getId();
+        }
+
         if ((*input_sequence) < (* parse_question.input_sequence)) {
             return true;
         }
@@ -248,7 +259,7 @@ private:
                             sub_tree_list = _parse(sub_input_sequence, symbol, question_list, question_cache);
                             question_cache[cache_question] = sub_tree_list;
                         }
-                        
+
                         question_list.pop_back();
                         if (sub_tree_list.size() == 0) {
                             partition_success = false;

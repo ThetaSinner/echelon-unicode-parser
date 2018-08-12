@@ -14,12 +14,10 @@ tasks.whenTaskAdded {task ->
         || task.name.contains("Parser_api_default_implTest")
         || task.name.contains("Parser_impl_ungerTest")
         || task.name.contains("Eup_benchmarkTest")
-        || task.name.contains("compileEup_benchmark")
         || (Os.isFamily(Os.FAMILY_WINDOWS) && (task.name.contains("GoogleTest")))) {
         task.enabled = false
     }
 }
-
 
 model {
     platforms {
@@ -153,10 +151,10 @@ model {
             }
             if (withBenchmark) {
                 googleBenchmark {
-                        headers.srcDir new File("/usr/local/include/benchmark")
-                        binaries.withType(StaticLibraryBinary) {
-                            staticLibraryFile = new File("/usr/local/lib/libbenchmark.a")
-                        }
+                    headers.srcDir new File("/usr/local/include/benchmark")
+                    binaries.withType(StaticLibraryBinary) {
+                        staticLibraryFile = new File("/usr/local/lib/libbenchmark.a")
+                    }
                 }
             }
         }

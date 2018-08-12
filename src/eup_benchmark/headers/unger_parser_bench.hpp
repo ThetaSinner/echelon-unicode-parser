@@ -116,8 +116,27 @@ static void BM_ParseShortExpression(benchmark::State& state) {
   for (auto _ : state)
     ungerParserWithSimpleArithmeticGrammar->parse(short_expression);
 }
-// Register the function as a benchmark
 BENCHMARK(BM_ParseShortExpression);
+
+/**
+ * Test the Unger parser with the simple arithemtic grammar against a medium expression
+ */
+static void BM_ParseMediumExpression(benchmark::State& state) {
+  auto short_expression = new api_default_impl::StringInputSequence("(i+i+i)xix(i+i+i)xi");
+  for (auto _ : state)
+    ungerParserWithSimpleArithmeticGrammar->parse(short_expression);
+}
+BENCHMARK(BM_ParseMediumExpression);
+
+/**
+ * Test the Unger parser with the simple arithemtic grammar against a large expression
+ */
+static void BM_ParseLargeExpression(benchmark::State& state) {
+  auto short_expression = new api_default_impl::StringInputSequence("ix(i+i+i)x(i+i+i+i+i)xixix(i+i+i+i+i+i)xix(i+i+i)xix(i+i)xix(i+i+i)x(i+i+i+i+i)xixix(i+i+i+i+i+i)xix(i+i+i)xix(i+i)");
+  for (auto _ : state)
+    ungerParserWithSimpleArithmeticGrammar->parse(short_expression);
+}
+BENCHMARK(BM_ParseLargeExpression);
 
 // Define another benchmark
 static void BM_StringCopy(benchmark::State& state) {
