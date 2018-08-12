@@ -53,6 +53,7 @@ None of the tests or benchmarks can be used on Windows at the moment. The Google
 When you build the project a benchmark executable is built. It uses Google's C++ [benchmark](https://github.com/google/benchmark) tool to do the timing.
 
 Inside the bench directory you'll find 3 shell scripts.
+
 | Name             | Description                                                                                  |
 |------------------|----------------------------------------------------------------------------------------------|
 | run-bench.sh     | Runs the benchmark executable and captures results into a results file ending in `_dev.json` |
